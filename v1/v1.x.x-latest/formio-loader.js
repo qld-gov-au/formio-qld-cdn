@@ -11,16 +11,16 @@
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 283:
+/***/ 203:
 /***/ ((module) => {
 
 module.exports = {
   // Turn off default buttons
   buttonSettings: {
     showCancel: false,
-    showPrevious: false,
-    showNext: false,
-    showSubmit: false
+    showPrevious: true,
+    showNext: true,
+    showSubmit: true
   },
   i18n: {
     en: {
@@ -104,120 +104,60 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "initFormio": () => (/* binding */ initFormio),
-/* harmony export */   "initFormioInstance": () => (/* binding */ initFormioInstance)
-/* harmony export */ });
-/* harmony import */ var _options_createForm_options__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(283);
-/* harmony import */ var _options_createForm_options__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_options_createForm_options__WEBPACK_IMPORTED_MODULE_0__);
 
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, {
+  "initFormio": () => (/* reexport */ initFormio),
+  "initFormioInstance": () => (/* reexport */ initFormioInstance)
+});
 
-const initFormioInstance = (formioElem, opts) => {
-  // if already initiated, reject
-  if (formioElem.dataset.formioFormUrl) return; // if doesn't have required options, reject
+// EXTERNAL MODULE: ./src/config/createForm.options.js
+var createForm_options = __webpack_require__(203);
+var createForm_options_default = /*#__PURE__*/__webpack_require__.n(createForm_options);
+;// CONCATENATED MODULE: ./src/config/createForm.controller.js
+/* harmony default export */ const createForm_controller = (({
+  form,
+  formConfirmation
+}) => {
+  // Change event/GTM
+  form.on("click", e => {
+    // eslint-disable-next-line no-underscore-dangle
+    const formTitle = form._form.title; // eslint-disable-next-line no-underscore-dangle
 
-  if (!opts.envUrl || !opts.projectName || !opts.formName) {
-    console.warn("Require envUrl, projectName, formName to initiate the form.", opts);
-    return;
-  }
+    const formModified = form._form.modified;
 
-  const bodyContainer = $("body");
-  const defaultRedirect = "contact-us/response/";
-  /*
-   * setup config
-   */
-
-  const baseUrl = `https://${opts.envUrl.trim()}`;
-  const formioContainerId = formioElem.getAttribute("id");
-  const submitBtn = $(`#${formioContainerId} button[name='data[submit]']`);
-  let formName = ""; // Check if value is true/exists and is numeric
-
-  if (opts.form_revision) {
-    formName = `${opts.formName}/v/${opts.form_revision}`;
-  } else {
-    formName = opts.formName;
-  }
-
-  const {
-    projectName
-  } = opts;
-  const formConfirmation = opts.formConfirmation || defaultRedirect;
-  const namespace = opts.namespace || `formio-${projectName}`;
-  const formUrl = `${baseUrl}/${projectName}/${formName}`;
-  /*
-   * init formio instance
-   */
-
-  const formio = new Formio(formUrl, {
-    base: baseUrl,
-    project: `${baseUrl}/${projectName}`,
-    namespace
-  });
-  formioElem.dataset.formio = JSON.stringify(formio);
-  formioElem.dataset.formioFormUrl = formUrl;
-  /*
-   * load formio form
-   */
-
-  Formio.createForm(formioElem, formUrl, // form,
-  { ...(_options_createForm_options__WEBPACK_IMPORTED_MODULE_0___default()),
-    formio,
-    namespace: formio.options.namespace
-  }).then(wizard => {
-    wizard.formio = formio;
-    wizard.options.formio = formio; // eslint-disable-next-line no-underscore-dangle
-
-    const formTitle = wizard._form.title; // eslint-disable-next-line no-underscore-dangle
-
-    const formModified = wizard._form.modified; // Force new tab on formlinks
-
-    bodyContainer.on("click", `#${formioContainerId} a`, e => {
-      e.target.target = "_blank";
-    }); // Change event/GTM
-
-    wizard.on("click", change => {
-      const changeObj = change;
-
-      if (typeof changeObj.changed !== "undefined" && typeof changeObj.changed.component !== "undefined") {
-        window.dataLayer.push({
-          event: "formio-interaction",
-          "formio-name": formTitle,
-          "formio-input-id": changeObj.changed.component.id,
-          "formio-input-type": changeObj.changed.component.type,
-          "formio-input-value": changeObj.changed.component.value,
-          "formio-input-key": changeObj.changed.component.key,
-          "formio-input-label-raw": changeObj.changed.component.label,
-          "formio-version": formModified,
-          "formio-category": `Form: ${formTitle}`,
-          "formio-action": "Value changed"
-        });
-      }
-    }); // Must use 'applicationSubmit' custom event on primary submit
-
-    wizard.on("applicationSubmit", () => {
-      submitBtn.attr("disabled", true);
-      wizard.submit().then(() => {
-        if (formConfirmation) {
-          window.location.href = `/${formConfirmation}`;
-        } else {
-          // No confirmation set. Using generic redirection
-          window.location.href = defaultRedirect;
-        }
-      }).catch(() => {
-        console.debug("Submission error");
+    if (typeof e.changed !== "undefined" && typeof e.changed.component !== "undefined") {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: "formio-interaction",
+        "formio-name": formTitle,
+        "formio-input-id": e.changed.component.id,
+        "formio-input-type": e.changed.component.type,
+        "formio-input-value": e.changed.component.value,
+        "formio-input-key": e.changed.component.key,
+        "formio-input-label-raw": e.changed.component.label,
+        "formio-version": formModified,
+        "formio-category": `Form: ${formTitle}`,
+        "formio-action": "Value changed"
       });
-    });
+    }
   });
-}; // polyfill plugin function to fix the namespace option doesn't pass to Formio.makeRequest
+  form.on("submitDone", () => {
+    if (formConfirmation) window.location.href = formConfirmation;
+  });
+});
+;// CONCATENATED MODULE: ./src/helpers/FormioLoader/FormioLoader.js
 
+ // polyfill plugin function to fix the namespace option doesn't pass to Formio.makeRequest
 
 const NamespacePlugin = {
   priority: 0,
 
   preRequest(requestArgs) {
     if (requestArgs.formio) {
-      const formioInstance = document.querySelector(`[data-form-url="${requestArgs.formio.formUrl}"]`);
+      const formioInstance = document.querySelector(`[data-formio-form-url="${requestArgs.formio.formUrl}"]`);
 
       if (formioInstance) {
         requestArgs.formio = JSON.parse(formioInstance.dataset.formio);
@@ -230,6 +170,94 @@ const NamespacePlugin = {
     return Promise.resolve(null);
   }
 
+};
+
+const initFormioInstance = (elem, opts) => {
+  // if already initiated, reject
+  if (elem.dataset.formioFormUrl) return; // if doesn't have required options, reject
+
+  if (!opts.envUrl || !opts.projectName || !opts.formName) {
+    console.warn("Require envUrl, projectName, formName to initiate the form.", opts);
+    return;
+  }
+  /*
+   * setup config
+   */
+
+
+  const baseUrl = `https://${opts.envUrl.trim()}`;
+  let formName = ""; // Check if value is true/exists and is numeric
+
+  if (opts.form_revision) {
+    formName = `${opts.formName}/v/${opts.form_revision}`;
+  } else {
+    formName = opts.formName;
+  }
+
+  const {
+    projectName
+  } = opts;
+  const namespace = opts.namespace || `formio-${projectName}`;
+  const formUrl = `${baseUrl}/${projectName}/${formName}`;
+  /*
+   * init formio instance
+   */
+
+  const formio = new Formio(formUrl, {
+    base: baseUrl,
+    project: `${baseUrl}/${projectName}`,
+    namespace
+  });
+  elem.dataset.formio = JSON.stringify(formio);
+  elem.dataset.formioFormUrl = formUrl;
+  /*
+   * load formio form
+   */
+
+  const defaultOptions = { ...(createForm_options_default()),
+    formio,
+    namespace: formio.options.namespace
+  };
+  const combinedOptions = { ...defaultOptions,
+    // combine with hook options
+    ...(typeof opts.createFormOptions === "function" && opts.createFormOptions({
+      envUrl: opts.envUrl,
+      projectName: opts.projectName,
+      formName: opts.formName,
+      defaultOptions,
+      elem
+    }))
+  }; // register plugin
+
+  if (!Formio.getPlugin("namespacePolyfill")) Formio.registerPlugin(NamespacePlugin, "namespacePolyfill");
+  Formio.createForm(elem, formUrl, combinedOptions).then(form => {
+    form.formio = formio;
+    form.options.formio = formio;
+    const callbackProps = {
+      form,
+      elem,
+      envUrl: opts.envUrl,
+      projectName: opts.projectName,
+      formName: opts.formName
+    };
+
+    if (typeof opts.createFormCallback === "function") {
+      // call custom callback hook
+      opts.createFormCallback(callbackProps);
+    } else {
+      // Force new tab on formlinks
+      $(elem).on("click", `a`, e => {
+        e.target.target = "_blank";
+      });
+    } // default controller
+
+
+    createForm_controller(callbackProps); // call custom hook controller
+
+    if (typeof opts.createFormController === "function") {
+      opts.createFormController(callbackProps);
+    }
+  });
 };
 
 const customiseErrorMessage = () => {
@@ -246,15 +274,12 @@ const customiseErrorMessage = () => {
 };
 
 const initFormio = () => {
-  window.dataLayer = window.dataLayer || []; // Init form
-
+  // Init form
   Formio.icons = "fontawesome";
   if (premium) Formio.use(premium); // custom error message
 
-  customiseErrorMessage(); // register plugin
-
-  Formio.registerPlugin(NamespacePlugin, "namespacePolyfill");
-  document.querySelectorAll("[data-formio]").forEach(formioElem => {
+  customiseErrorMessage();
+  document.querySelectorAll("[data-formio]").forEach(elem => {
     const {
       formioProjectName,
       formioFormName,
@@ -262,27 +287,28 @@ const initFormio = () => {
       formioPdfDownload,
       formioFormConfirmation,
       formioFormRevision,
-      formioNamespace
-    } = formioElem.dataset;
-    initFormioInstance(formioElem, {
+      formioNamespace,
+      formioCreateformOptions,
+      formioCreateformController,
+      formioCreateformCallback
+    } = elem.dataset;
+    initFormioInstance(elem, {
       projectName: formioProjectName,
       formName: formioFormName,
       envUrl: formioEnvUrl,
       pdfDownload: formioPdfDownload,
       formConfirmation: formioFormConfirmation,
       formRevision: formioFormRevision,
-      namespace: formioNamespace
+      namespace: formioNamespace,
+      createFormOptions: window[formioCreateformOptions],
+      createFormController: window[formioCreateformController],
+      createFormCallback: window[formioCreateformCallback]
     });
   });
-}; // Persistent fix for iPhone/Safari
-
-
-window.onpageshow = event => {
-  if (event.persisted) {
-    window.location.reload();
-  }
 };
 
+
+;// CONCATENATED MODULE: ./src/helpers/FormioLoader/index.js
 
 })();
 

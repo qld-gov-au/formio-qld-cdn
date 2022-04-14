@@ -411,7 +411,7 @@ return /******/ (() => { // webpackBootstrap
 
 /***/ }),
 
-/***/ 384:
+/***/ 596:
 /***/ ((module) => {
 
 module.exports = {
@@ -17751,8 +17751,8 @@ __webpack_require__.d(bootstrap_namespaceObject, {
   "plsPlusAddress": () => (plsPlusAddress)
 });
 
-// EXTERNAL MODULE: ./src/options/build.options.js
-var build_options = __webpack_require__(384);
+// EXTERNAL MODULE: ./src/config/build.options.js
+var build_options = __webpack_require__(596);
 var build_options_default = /*#__PURE__*/__webpack_require__.n(build_options);
 ;// CONCATENATED MODULE: ./src/utils/getComponents.js
 const getComponents = components => {
@@ -18357,6 +18357,7 @@ class PlsPlusAddress extends ContainerComponent {
                 childElement.value = component.dataValue;
               });
             });
+            this.redraw();
           }
         });
         this.addEventListener(elem, "blur", () => {
@@ -18460,6 +18461,7 @@ class PlsPlusAddress extends ContainerComponent {
       if (childElement) childElement.value = this.address[component.component.key] || "";
     });
     this.updateRemoveIcon(index);
+    this.redraw();
   }
 
   getDisplayValue(value = this.address) {
@@ -18529,7 +18531,7 @@ PlsPlusAddress.editForm = PlsPlusAddress_form;
 
 
 ;// CONCATENATED MODULE: ./src/templates/bootstrap/plsPlusAddress/form.ejs
-/* harmony default export */ const plsPlusAddress_form = ("<div class=\"address-autocomplete-container\">\n  <input\n    ref=\"{{ ctx.ref.searchInput }}\"\n    {% for (var attr in ctx.inputAttributes) { %}\n      {{attr}}=\"{{ctx.inputAttributes[attr]}}\"\n    {% } %}\n    value=\"{{ ctx.displayValue }}\"\n    autocomplete=\"off\"\n    aria-label=\"{{ctx.t('autocomplete')}}\"\n  >\n  {% if (!ctx.component.disableClearIcon) { %}\n    <i\n      class=\"address-autocomplete-remove-value-icon fa fa-times\"\n      tabindex=\"{{ ctx.inputAttributes.tabindex }}\"\n      ref=\"{{ ctx.ref.removeValueIcon }}\"\n    ></i>\n  {% } %}\n</div>\n{% if (!ctx.hasApiKey) { %}\n    <div class=\"form-text\">Please provide an API key in Provider to use the search function.</div>\n{% } %}\n{% if (ctx.self.manualModeEnabled) { %}\n  <div class=\"form-check checkbox\">\n    <label class=\"form-check-label\">\n      <input\n        ref=\"{{ ctx.ref.modeSwitcher }}\"\n        type=\"checkbox\"\n        class=\"form-check-input\"\n        tabindex=\"{{ ctx.inputAttributes.tabindex }}\"\n        {% if (ctx.mode.manual) { %}checked=true{% } %}\n        {% if (ctx.disabled) { %}disabled=true{% } %}\n      >\n      <span>{{ ctx.component.switchToManualModeLabel }}</span>\n    </label>\n  </div>\n{% } %}\n{% if (ctx.self.manualModeEnabled) { %}\n  <div ref=\"{{ ctx.nestedKey }}\">\n    {{ ctx.children }}\n  </div>\n{% } %}\n{% if (ctx.mode.manual) { %}\n<div>\n  <p><a href=\"#\" target=\"_blank\">Please take part to improve our address database if we couldn't find your address.</a></p>\n</div>\n{% } %}");
+/* harmony default export */ const plsPlusAddress_form = ("<div class=\"address-autocomplete-container\">\n  <input\n    ref=\"{{ ctx.ref.searchInput }}\"\n    {% for (var attr in ctx.inputAttributes) { %}\n      {{attr}}=\"{{ctx.inputAttributes[attr]}}\"\n    {% } %}\n    value=\"{{ ctx.displayValue }}\"\n    autocomplete=\"off\"\n    aria-label=\"{{ctx.t('autocomplete')}}\"\n  >\n  {% if (!ctx.component.disableClearIcon) { %}\n    <i\n      class=\"address-autocomplete-remove-value-icon fa fa-times\"\n      tabindex=\"{{ ctx.inputAttributes.tabindex }}\"\n      ref=\"{{ ctx.ref.removeValueIcon }}\"\n    ></i>\n  {% } %}\n</div>\n{% if (!ctx.hasApiKey) { %}\n    <div class=\"form-text\">Please provide an API key in Provider to use the search function.</div>\n{% } %}\n{% if (ctx.self.manualModeEnabled) { %}\n  <div class=\"form-check checkbox\">\n    <label class=\"form-check-label\">\n      <input\n        ref=\"{{ ctx.ref.modeSwitcher }}\"\n        type=\"checkbox\"\n        class=\"form-check-input\"\n        tabindex=\"{{ ctx.inputAttributes.tabindex }}\"\n        {% if (ctx.mode.manual) { %}checked=true{% } %}\n        {% if (ctx.disabled) { %}disabled=true{% } %}\n      >\n      <span>{{ ctx.component.switchToManualModeLabel }}</span>\n    </label>\n  </div>\n{% } %}\n{% if (ctx.self.manualModeEnabled && ( ctx.mode.manual || ctx.displayValue)) { %}\n  <div ref=\"{{ ctx.nestedKey }}\">\n    {{ ctx.children }}\n  </div>\n{% } %}\n{% if (ctx.mode.manual) { %}\n<div>\n  <!-- Todo Link/function to improve the address database -->\n  <!-- <p><a href=\"#\" target=\"_blank\">Please take part to improve our address database if we couldn't find your address.</a></p> -->\n</div>\n{% } %}");
 ;// CONCATENATED MODULE: ./src/templates/bootstrap/plsPlusAddress/html.ejs
 /* harmony default export */ const html = ("<div ref=\"value\">{% if (ctx.displayValue) { %}{{ctx.displayValue}}{% } else { %}-{% } %}</div>");
 ;// CONCATENATED MODULE: ./src/templates/bootstrap/plsPlusAddress/index.js

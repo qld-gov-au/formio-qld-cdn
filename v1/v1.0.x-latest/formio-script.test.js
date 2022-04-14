@@ -1,12 +1,63 @@
-/******/ (() => { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["FormioScript"] = factory();
+	else
+		root["FormioScript"] = factory();
+})(globalThis, function() {
+return /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
+/******/ 	// The require scope
+/******/ 	var __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
 var __webpack_exports__ = {};
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
 
-;// CONCATENATED MODULE: ./src/matrixHelpers/FormioScript/index.js
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, {
+  "init": () => (/* binding */ init)
+});
+
+;// CONCATENATED MODULE: ./src/helpers/FormioScript/FormioScript.js
 const defaultVersion = window.formioQldCdnVersion || "v1/v1.x.x-latest";
-const createScripts = (scripts, i = 0) => {
+const createScripts = (scripts, i, mainResolve) => {
   if (i > scripts.length - 1) {
     FormioLoader.initFormio();
+    mainResolve();
     return;
   }
 
@@ -33,10 +84,10 @@ const createScripts = (scripts, i = 0) => {
       };
     });
     promise.then(() => {
-      createScripts(scripts, i + 1);
+      createScripts(scripts, i + 1, mainResolve);
     });
   } else {
-    createScripts(scripts, i + 1);
+    createScripts(scripts, i + 1, mainResolve);
   }
 };
 const getDefaultScripts = ({
@@ -68,25 +119,33 @@ const getDefaultScripts = ({
     type: "link",
     href: `https://${subdomain}.qgov.net.au/formio-qld/${version}/premium.css`,
     rel: "stylesheet"
-  }, {
-    type: "link",
-    href: `https://${subdomain}.qgov.net.au/formio-qld/${version}/formio-qld.min.css`,
-    rel: "stylesheet"
-  }];
+  } // {
+  //   type: "link",
+  //   href: `https://${subdomain}.qgov.net.au/formio-qld/${version}/formio-qld.min.css`,
+  //   rel: "stylesheet",
+  // },
+  ];
 };
-const initScript = scripts => {
+const initScript = scripts => new Promise(resolve => {
   if (window.formioScriptLoaded) {
-    if (typeof FormioLoader !== "undefined") FormioLoader.initFormio();
+    if (typeof FormioLoader !== "undefined") setTimeout(() => {
+      FormioLoader.initFormio();
+      resolve();
+    });
   } else {
     window.formioScriptLoaded = true;
-    createScripts(scripts);
+    createScripts(scripts, 0, resolve);
   }
-};
-;// CONCATENATED MODULE: ./src/matrixHelpers/FormioScript/scriptTest.js
+});
+;// CONCATENATED MODULE: ./src/helpers/FormioScript/index.js
+
+;// CONCATENATED MODULE: ./src/helpers/FormioScript/index.testing.js
 
 const scripts = getDefaultScripts({
   subdomain: "test-static"
 });
-initScript(scripts);
+const init = () => initScript(scripts);
+/******/ 	return __webpack_exports__;
 /******/ })()
 ;
+});
