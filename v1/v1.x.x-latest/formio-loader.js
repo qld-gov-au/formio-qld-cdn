@@ -260,7 +260,8 @@ const initFormioInstance = (elem, opts) => {
   });
 };
 
-const customiseErrorMessage = () => {
+const defaultInitFormioAction = () => {
+  // customise error message
   const newFunc = Formio.Form.prototype.errorForm.bind({});
 
   Formio.Form.prototype.errorForm = err => {
@@ -276,9 +277,14 @@ const customiseErrorMessage = () => {
 const initFormio = () => {
   // Init form
   Formio.icons = "fontawesome";
-  if (premium) Formio.use(premium); // custom error message
+  if (premium) Formio.use(premium); // default callback after Formio is loaded
 
-  customiseErrorMessage();
+  if (typeof window.initFormioHook === "function") {
+    window.initFormioHook();
+  } else {
+    defaultInitFormioAction();
+  }
+
   document.querySelectorAll("[data-formio]").forEach(elem => {
     const {
       formioProjectName,

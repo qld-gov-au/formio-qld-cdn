@@ -18267,8 +18267,8 @@ class PlsPlusAddress extends ContainerComponent {
         this.dataValue.address.selectedAddress = this.composedAddress;
         return super.onChange(flags, fromRoot);
       };
-    });
-    this.component.validate.required = !this.manualMode;
+    }); // this.component.validate.required = !this.manualMode;
+
     return this.renderTemplate(this.templateName, {
       children: this.hasChildren ? this.renderComponents() : "",
       nestedKey: this.nestedKey,
