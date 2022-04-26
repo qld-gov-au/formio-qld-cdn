@@ -143,6 +143,10 @@ var createForm_options_default = /*#__PURE__*/__webpack_require__.n(createForm_o
         "formio-action": "Value changed"
       });
     }
+  }); // backward compatibility, for old forms that using this event to do submission
+
+  form.on("applicationSubmit", () => {
+    form.submit();
   });
   form.on("submitDone", () => {
     if (formConfirmation) window.location.href = formConfirmation;
