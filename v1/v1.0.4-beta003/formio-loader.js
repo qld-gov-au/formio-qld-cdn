@@ -220,10 +220,7 @@ const initFormioInstance = (elem, opts) => {
   };
   const combinedOptions = { ...defaultOptions,
     // combine with hook options
-    ...(typeof opts.createFormOptions === "function" && opts.createFormOptions({
-      envUrl: opts.envUrl,
-      projectName: opts.projectName,
-      formName: opts.formName,
+    ...(typeof opts.createFormOptions === "function" && opts.createFormOptions({ ...opts,
       defaultOptions,
       elem
     }))
@@ -236,9 +233,7 @@ const initFormioInstance = (elem, opts) => {
     const callbackProps = {
       form,
       elem,
-      envUrl: opts.envUrl,
-      projectName: opts.projectName,
-      formName: opts.formName
+      ...opts
     };
 
     if (typeof opts.createFormCallback === "function") {
