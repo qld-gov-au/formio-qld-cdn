@@ -18062,7 +18062,7 @@ class PlsPlusAddress extends FieldsetComponent {
     if (options.components) {
       this.components = options.components;
     } else {
-      const components = this.hook("addComponents", this.componentComponents, this) || [];
+      const components = this.hook("addComponents", lodash_default().defaultsDeep(this.componentComponents, this.defaultSchema.components), this) || [];
       components.forEach(component => this.addComponent(component, data));
     }
   }
