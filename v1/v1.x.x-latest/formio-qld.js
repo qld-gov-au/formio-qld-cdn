@@ -17739,8 +17739,6 @@ __webpack_require__.r(__webpack_exports__);
 var components_namespaceObject = {};
 __webpack_require__.r(components_namespaceObject);
 __webpack_require__.d(components_namespaceObject, {
-  "CustomHeader": () => (CustomHeader),
-  "CustomTextfield": () => (CustomTextfield),
   "PlsPlusAddress": () => (PlsPlusAddress)
 });
 
@@ -17763,61 +17761,6 @@ const getComponents = components => {
   });
   return customComponents;
 };
-;// CONCATENATED MODULE: ./src/components/CustomHeader/CustomHeader.js
-const HTMLComponent = Formio.Components.components.htmlelement;
-class CustomHeader extends HTMLComponent {
-  /**
-   * Define the default schema to change the type and tag and label.
-   */
-  static schema(...extend) {
-    return HTMLComponent.schema({
-      label: "CustomHeader",
-      type: "customheader",
-      tag: "h1"
-    }, ...extend);
-  }
-
-  static get builderInfo() {
-    return {
-      title: "CustomHeader",
-      group: "custom",
-      icon: "code",
-      weight: 2,
-      documentation: "/userguide/#html-element-component",
-      schema: CustomHeader.schema()
-    };
-  }
-
-}
-;// CONCATENATED MODULE: ./src/components/CustomHeader/index.js
-
-;// CONCATENATED MODULE: ./src/components/CustomTextfield/CustomTextfield.js
-const TextfieldComponent = Formio.Components.components.textfield;
-class CustomTextfield extends TextfieldComponent {
-  /**
-   * Define the default schema to change the type and tag and label.
-   */
-  static schema(...extend) {
-    return TextfieldComponent.schema({
-      label: "CustomTextfield",
-      type: "customtextfield"
-    }, ...extend);
-  }
-
-  static get builderInfo() {
-    return {
-      title: "CustomTextfield",
-      group: "custom",
-      icon: "terminal",
-      weight: 2,
-      documentation: "/userguide/#html-element-component",
-      schema: CustomTextfield.schema()
-    };
-  }
-
-}
-;// CONCATENATED MODULE: ./src/components/CustomTextfield/index.js
-
 // EXTERNAL MODULE: ./node_modules/autocompleter/autocomplete.js
 var autocomplete = __webpack_require__(338);
 var autocomplete_default = /*#__PURE__*/__webpack_require__.n(autocomplete);
@@ -18520,8 +18463,6 @@ PlsPlusAddress.editForm = PlsPlusAddress_form;
 ;// CONCATENATED MODULE: ./src/components/PlsPlusAddress/index.js
 
 ;// CONCATENATED MODULE: ./src/components/index.js
-
-
 
 ;// CONCATENATED MODULE: ./src/templates/bootstrap/plsPlusAddress/form.ejs
 /* harmony default export */ const plsPlusAddress_form = ("<div class=\"address-autocomplete-container\">\n  <input\n    ref=\"{{ ctx.ref.searchInput }}\"\n    {% for (var attr in ctx.inputAttributes) { %}\n      {{attr}}=\"{{ctx.inputAttributes[attr]}}\"\n    {% } %}\n    value=\"{{ ctx.displayValue }}\"\n    autocomplete=\"off\"\n    aria-label=\"{{ctx.t('autocomplete')}}\"\n  >\n  {% if (!ctx.component.disableClearIcon) { %}\n    <i\n      class=\"address-autocomplete-remove-value-icon fa fa-times\"\n      tabindex=\"{{ ctx.inputAttributes.tabindex }}\"\n      ref=\"{{ ctx.ref.removeValueIcon }}\"\n    ></i>\n  {% } %}\n</div>\n{% if (!ctx.hasApiKey) { %}\n    <div class=\"form-text\">Please provide an API key in Provider to use the search function.</div>\n{% } %}\n{% if (ctx.self.manualModeEnabled) { %}\n  <div class=\"form-check checkbox\">\n    <label class=\"form-check-label\">\n      <input\n        ref=\"{{ ctx.ref.modeSwitcher }}\"\n        type=\"checkbox\"\n        class=\"form-check-input\"\n        tabindex=\"{{ ctx.inputAttributes.tabindex }}\"\n        {% if (ctx.mode.manual) { %}checked=true{% } %}\n        {% if (ctx.disabled) { %}disabled=true{% } %}\n      >\n      <span>{{ ctx.component.switchToManualModeLabel }}</span>\n    </label>\n  </div>\n{% } %}\n{% if (ctx.self.manualModeEnabled && ( ctx.mode.manual || ctx.displayValue)) { %}\n  <div ref=\"{{ ctx.nestedKey }}\">\n    {{ ctx.children }}\n  </div>\n{% } %}\n{% if (ctx.mode.manual) { %}\n<div>\n  <!-- Todo Link/function to improve the address database -->\n  <!-- <p><a href=\"#\" target=\"_blank\">Please take part to improve our address database if we couldn't find your address.</a></p> -->\n</div>\n{% } %}");
