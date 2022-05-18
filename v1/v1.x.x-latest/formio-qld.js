@@ -18595,9 +18595,18 @@ const {
   ignore: true
 }, {
   type: "textarea",
-  key: "downloadMessage",
-  label: "Download message",
-  tooltip: "Message show up next to the download button after form submission.",
+  key: "downloadSuccessMessage",
+  label: "Download message if PDF generated successfully",
+  tooltip: "Message show up after form submission if PDF generated successfully.",
+  rows: 5,
+  editor: "ckeditor",
+  input: true,
+  weight: 120
+}, {
+  type: "textarea",
+  key: "downloadFailedMessage",
+  label: "Download message if PDF didn't generate",
+  tooltip: "Message show after form submission if PDF didn't generate.",
   rows: 5,
   editor: "ckeditor",
   input: true,
@@ -18775,7 +18784,8 @@ class PdfSubmitButton extends Button {
       type: "pdfsubmitbutton",
       label: "Submit",
       key: "pdfsubmitbutton",
-      downloadMessage: "",
+      downloadSuccessMessage: "",
+      downloadFailedMessage: "",
       downloadButtonLabel: undefined,
       downloadButtonClass: undefined,
       downloadButtonTarget: undefined,
@@ -18800,7 +18810,8 @@ class PdfSubmitButton extends Button {
         // get the pdf DownloadUrl from submission response, the action name setup in the form needed to be `pdfUrl`
         const pdfUrl = this.component.debugMode ? this.component.debugPdfUrl : e?.metadata?.pdfUrl?.DownloadUrl;
         const {
-          downloadMessage,
+          downloadSuccessMessage,
+          downloadFailedMessage,
           downloadButtonClass,
           downloadButtonLabel,
           downloadButtonTarget
@@ -18808,16 +18819,22 @@ class PdfSubmitButton extends Button {
 
         const className = downloadButtonClass !== undefined ? downloadButtonClass : "btn btn-primary";
         const target = downloadButtonTarget !== undefined ? downloadButtonTarget : "_blank";
-        const label = downloadButtonLabel !== undefined ? downloadButtonLabel : "Download"; // replace form div container with downloadMessage
+        const label = downloadButtonLabel !== undefined ? downloadButtonLabel : "Download"; // replace form div container with downloadSuccessMessage
 
-        this.root.element.innerHTML = `
-            ${downloadMessage}
-            <div class="mt-3">
-              <a href="${pdfUrl}" class="${className}" target="${target}" />
-                ${label}
-              </a>
-            </div>
-          `;
+        if (pdfUrl) {
+          this.root.element.innerHTML = `
+              ${downloadSuccessMessage}
+              <div class="mt-3">
+                <a href="${pdfUrl}" class="${className}" target="${target}" />
+                  ${label}
+                </a>
+              </div>
+            `;
+        } else {
+          this.root.element.innerHTML = `
+              ${downloadFailedMessage}
+            `;
+        }
       }, true);
     }
   }
