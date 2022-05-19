@@ -17904,6 +17904,9 @@ class PlsPlusAddress extends FieldsetComponent {
       enableManualMode: true,
       input: true,
       persistent: "client-only",
+      validate: {
+        required: true
+      },
       components: [{
         key: "addressData",
         type: "container",
@@ -18255,10 +18258,11 @@ class PlsPlusAddress extends FieldsetComponent {
     });
 
     if (!this.builderMode) {
-      this.component.validate = {
-        custom: `valid = !!instance.address.selectedAddress;`,
-        customMessage: `${this.component.label} is required.`,
-        required: !this.manualMode
+      this.component.validate = { ...(this.originalComponent?.validate?.required && {
+          custom: `valid = !!instance.address.selectedAddress;`,
+          customMessage: `${this.component.label} is required.`,
+          required: !this.manualMode
+        })
       };
     }
 
