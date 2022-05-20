@@ -17739,6 +17739,7 @@ __webpack_require__.r(__webpack_exports__);
 var components_namespaceObject = {};
 __webpack_require__.r(components_namespaceObject);
 __webpack_require__.d(components_namespaceObject, {
+  "PdfSubmitButton": () => (PdfSubmitButton),
   "PlsPlusAddress": () => (PlsPlusAddress)
 });
 
@@ -18457,7 +18458,316 @@ class PlsPlusAddress extends FieldsetComponent {
 PlsPlusAddress.editForm = PlsPlusAddress_form;
 ;// CONCATENATED MODULE: ./src/components/PlsPlusAddress/index.js
 
+;// CONCATENATED MODULE: ./src/components/PdfSubmitButton/editFrom/PdfSubmitButton.edit.display.js
+/*
+ * use form.io Button component as boilerplate
+ * https://github.com/formio/formio.js/blob/master/src/components/button/editForm/Button.edit.display.js
+ *
+ */
+/* harmony default export */ const PdfSubmitButton_edit_display = ([{
+  type: "content",
+  html: `<h2>Please follow <a href="#" target="_blank">this guide</a> to setup the form action before using this component.</h2>`,
+  input: false,
+  weight: -10
+}, {
+  key: "labelPosition",
+  ignore: true
+}, {
+  key: "placeholder",
+  ignore: true
+}, {
+  key: "hideLabel",
+  ignore: true
+}, {
+  key: "action",
+  ignore: true
+}, {
+  type: "textarea",
+  key: "downloadSuccessMessage",
+  label: "Download message if PDF generated successfully",
+  tooltip: "Message show up after form submission if PDF generated successfully.",
+  rows: 5,
+  input: true,
+  weight: 120,
+  editor: "ace",
+  as: "html"
+}, {
+  type: "textarea",
+  key: "downloadFailedMessage",
+  label: "Download message if PDF didn't generate",
+  tooltip: "Message show after form submission if PDF didn't generate.",
+  rows: 5,
+  input: true,
+  weight: 120,
+  editor: "ace",
+  as: "html"
+}, {
+  type: "textfield",
+  label: "Download message class if success",
+  key: "downloadSuccessMessageClass",
+  weight: 120,
+  tooltip: "Class name of the download message container.",
+  input: true,
+  placeholder: "eg. alert alert-success"
+}, {
+  type: "textfield",
+  label: "Download message class if success",
+  key: "downloadSuccessMessageClass",
+  weight: 120,
+  tooltip: "Class name of the download message container.",
+  input: true,
+  placeholder: "eg. alert alert-success"
+}, {
+  type: "textfield",
+  label: "Download message class if didn't generate PDF",
+  key: "downloadFailedMessageClass",
+  weight: 120,
+  tooltip: "Class name of the download message container.",
+  input: true,
+  placeholder: "eg. alert alert-success"
+}, {
+  type: "textfield",
+  label: "Download button label",
+  key: "downloadButtonLabel",
+  weight: 121,
+  tooltip: "Label of the download button.",
+  input: true,
+  placeholder: "Download"
+}, {
+  type: "textfield",
+  label: "Download button class",
+  key: "downloadButtonClass",
+  weight: 122,
+  tooltip: "Class name of the download button.",
+  input: true,
+  placeholder: "btn btn-primary"
+}, {
+  type: "textfield",
+  label: "Download button target",
+  key: "downloadButtonTarget",
+  weight: 123,
+  tooltip: "Link target of the download button.",
+  input: true,
+  placeholder: "_blank"
+}, {
+  type: "checkbox",
+  input: true,
+  inputType: "checkbox",
+  key: "saveOnEnter",
+  label: "Save On Enter",
+  weight: 113,
+  tooltip: "Use the Enter key to submit form.",
+  conditional: {
+    json: {
+      "===": [{
+        var: "data.action"
+      }, "submit"]
+    }
+  }
+}, {
+  type: "select",
+  key: "theme",
+  label: "Theme",
+  input: true,
+  tooltip: "The color theme of this button.",
+  dataSrc: "values",
+  weight: 140,
+  data: {
+    values: [{
+      label: "Primary",
+      value: "primary"
+    }, {
+      label: "Secondary",
+      value: "secondary"
+    }, {
+      label: "Info",
+      value: "info"
+    }, {
+      label: "Success",
+      value: "success"
+    }, {
+      label: "Danger",
+      value: "danger"
+    }, {
+      label: "Warning",
+      value: "warning"
+    }]
+  }
+}, {
+  type: "select",
+  key: "size",
+  label: "Size",
+  input: true,
+  tooltip: "The size of this button.",
+  dataSrc: "values",
+  weight: 150,
+  data: {
+    values: [{
+      label: "Small",
+      value: "sm"
+    }, {
+      label: "Medium",
+      value: "md"
+    }, {
+      label: "Large",
+      value: "lg"
+    }]
+  }
+}, {
+  type: "textfield",
+  key: "leftIcon",
+  label: "Left Icon",
+  input: true,
+  placeholder: "Enter icon classes",
+  tooltip: "This is the full icon class string to show the icon. Example: 'fa fa-plus'",
+  weight: 160
+}, {
+  type: "textfield",
+  key: "rightIcon",
+  label: "Right Icon",
+  input: true,
+  placeholder: "Enter icon classes",
+  tooltip: "This is the full icon class string to show the icon. Example: 'fa fa-plus'",
+  weight: 170
+}, {
+  type: "checkbox",
+  key: "block",
+  label: "Block Button",
+  input: true,
+  weight: 155,
+  tooltip: "This control should span the full width of the bounding container."
+}, {
+  type: "checkbox",
+  key: "disableOnInvalid",
+  label: "Disable on Form Invalid",
+  tooltip: "This will disable this field if the form is invalid.",
+  input: true,
+  weight: 620
+}]);
+;// CONCATENATED MODULE: ./src/components/PdfSubmitButton/PdfSubmitButton.form.js
+/*
+ * use form.io Button component as boilerplate
+ * https://github.com/formio/formio.js/blob/master/src/components/button/Button.form.js
+ *
+ */
+
+const PdfSubmitButton_form_baseEditForm = Formio.Components.components.base.editForm;
+/* harmony default export */ const PdfSubmitButton_form = ((...extend) => {
+  return PdfSubmitButton_form_baseEditForm([{
+    key: "display",
+    components: PdfSubmitButton_edit_display
+  }, {
+    key: "data",
+    ignore: true
+  }, {
+    key: "validation",
+    ignore: true
+  }, {
+    key: "addons",
+    ignore: true
+  }], ...extend);
+});
+;// CONCATENATED MODULE: ./src/components/PdfSubmitButton/PdfSubmitButton.js
+/*
+ * inherit button component
+ * https://github.com/formio/formio.js/blob/master/src/components/button/Button.js
+ *
+ */
+
+const Button = Formio.Components.components.button;
+class PdfSubmitButton extends Button {
+  static schema(...extend) {
+    return Button.schema({
+      type: "pdfsubmitbutton",
+      label: "Submit",
+      key: "pdfsubmitbutton",
+      downloadSuccessMessage: "",
+      downloadFailedMessage: "",
+      downloadButtonLabel: undefined,
+      downloadButtonClass: undefined,
+      downloadButtonTarget: undefined,
+      downloadSuccessMessageClass: undefined,
+      downloadFailedMessageClass: undefined,
+      // props below are for debugging in storybook
+      debugMode: false,
+      debugPdfUrl: "",
+      ...extend
+    });
+  }
+
+  init() {
+    // hide the default submit button if it is a wizard
+    if (this.root?.options?.buttonSettings) this.root.options.buttonSettings.showSubmit = false;
+    super.init();
+  }
+
+  attachButton() {
+    super.attachButton();
+
+    if (this.component.action === "submit") {
+      this.on(this.component.debugMode ? "submit" : "submitDone", e => {
+        // get the pdf DownloadUrl from submission response, the action name setup in the form needed to be `pdfUrl`
+        const pdfUrl = this.component.debugMode ? this.component.debugPdfUrl : e?.metadata?.pdfUrl?.DownloadUrl;
+        const {
+          downloadSuccessMessage,
+          downloadFailedMessage,
+          downloadButtonClass,
+          downloadButtonLabel,
+          downloadButtonTarget,
+          downloadSuccessMessageClass,
+          downloadFailedMessageClass
+        } = this.component; // setup default settings for download button
+
+        const className = downloadButtonClass !== undefined ? downloadButtonClass : "btn btn-primary";
+        const target = downloadButtonTarget !== undefined ? downloadButtonTarget : "_blank";
+        const label = downloadButtonLabel !== undefined ? downloadButtonLabel : "Download";
+        const successMessageClass = downloadSuccessMessageClass || "";
+        const failedMessageClass = downloadFailedMessageClass || ""; // replace form div container with downloadSuccessMessage
+
+        if (pdfUrl) {
+          this.root.element.innerHTML = `
+              <div class="${successMessageClass}">
+                ${downloadSuccessMessage ? `<div class="mb-3 download-success-message-container">${downloadSuccessMessage}</div>` : ""}
+                <div class="download-button-container">
+                  <a href="${pdfUrl}" class="${className}" target="${target}" />
+                    ${label}
+                  </a>
+                </div>
+              </div>
+            `;
+        } else {
+          this.root.element.innerHTML = `
+              <div class="${failedMessageClass}">
+                <div class="download-failed-message-container">
+                  ${downloadFailedMessage}
+                </div>
+              </div>
+            `;
+        }
+
+        this.root.element.scrollIntoView();
+      }, true);
+    }
+  }
+
+  static get builderInfo() {
+    return {
+      title: "PdfSubmitButton",
+      group: "custom",
+      icon: "fa-solid fa-file",
+      documentation: "/userguide/#button",
+      weight: 2,
+      schema: { ...PdfSubmitButton.schema()
+      }
+    };
+  }
+
+}
+PdfSubmitButton.editForm = PdfSubmitButton_form;
+;// CONCATENATED MODULE: ./src/components/PdfSubmitButton/index.js
+
 ;// CONCATENATED MODULE: ./src/components/index.js
+
 
 ;// CONCATENATED MODULE: ./src/templates/bootstrap/plsPlusAddress/form.ejs
 /* harmony default export */ const plsPlusAddress_form = ("<div class=\"address-autocomplete-container\">\n  <input\n    ref=\"{{ ctx.ref.searchInput }}\"\n    {% for (var attr in ctx.inputAttributes) { %}\n      {{attr}}=\"{{ctx.inputAttributes[attr]}}\"\n    {% } %}\n    value=\"{{ ctx.displayValue }}\"\n    autocomplete=\"off\"\n    aria-label=\"{{ctx.t('autocomplete')}}\"\n  >\n  {% if (!ctx.component.disableClearIcon) { %}\n    <i\n      class=\"address-autocomplete-remove-value-icon fa fa-times\"\n      tabindex=\"{{ ctx.inputAttributes.tabindex }}\"\n      ref=\"{{ ctx.ref.removeValueIcon }}\"\n    ></i>\n  {% } %}\n</div>\n{% if (!ctx.hasApiKey) { %}\n    <div class=\"form-text\">Please provide an API key in Provider to use the search function.</div>\n{% } %}\n{% if (ctx.self.manualModeEnabled) { %}\n  <div class=\"form-check checkbox\">\n    <label class=\"form-check-label\">\n      <input\n        ref=\"{{ ctx.ref.modeSwitcher }}\"\n        type=\"checkbox\"\n        class=\"form-check-input\"\n        tabindex=\"{{ ctx.inputAttributes.tabindex }}\"\n        {% if (ctx.mode.manual) { %}checked=true{% } %}\n        {% if (ctx.disabled) { %}disabled=true{% } %}\n      >\n      <span>{{ ctx.component.switchToManualModeLabel }}</span>\n    </label>\n  </div>\n{% } %}\n{% if (ctx.self.manualModeEnabled && ( ctx.mode.manual || ctx.displayValue)) { %}\n  <div ref=\"{{ ctx.nestedKey }}\">\n    {{ ctx.children }}\n  </div>\n{% } %}\n{% if (ctx.mode.manual) { %}\n<div>\n  <!-- Todo Link/function to improve the address database -->\n  <!-- <p><a href=\"#\" target=\"_blank\">Please take part to improve our address database if we couldn't find your address.</a></p> -->\n</div>\n{% } %}");
