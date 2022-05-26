@@ -157,7 +157,7 @@ var createForm_options_default = /*#__PURE__*/__webpack_require__.n(createForm_o
  // plugin function to fix the namespace/project option doesn't pass to Formio.makeRequest/Formio.makeStaticRequest
 
 const requestPluginHandler = (requestArgs, opts) => {
-  if (requestArgs.formio) {
+  if (requestArgs?.formio) {
     const formioInstance = document.querySelector(`[data-formio-form-url="${requestArgs.formio.formUrl}"]`);
 
     if (formioInstance) {
@@ -177,7 +177,7 @@ const requestPluginHandler = (requestArgs, opts) => {
   // hence the workaround is to inject the project id to the url
 
 
-  if (requestArgs.url.includes(`${opts.formio.base}/recaptcha`)) {
+  if (requestArgs?.url?.includes(`${opts.formio.base}/recaptcha`)) {
     requestArgs.url = requestArgs.url.replace(`${opts.formio.base}/recaptcha`, `${opts.formio.projectUrl}/recaptcha`);
   }
 

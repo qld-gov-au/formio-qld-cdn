@@ -119,12 +119,11 @@ const getDefaultScripts = ({
     type: "link",
     href: `https://${subdomain}.qgov.net.au/formio-qld/${version}/premium.css`,
     rel: "stylesheet"
-  } // {
-  //   type: "link",
-  //   href: `https://${subdomain}.qgov.net.au/formio-qld/${version}/formio-qld.min.css`,
-  //   rel: "stylesheet",
-  // },
-  ];
+  }, {
+    type: "link",
+    href: `https://${subdomain}.qgov.net.au/formio-qld/${version}/formio-qld.min.css`,
+    rel: "stylesheet"
+  }];
 };
 const initScript = scripts => new Promise(resolve => {
   if (window.formioScriptLoaded) {
@@ -166,12 +165,11 @@ const scripts = [{
   type: "link",
   href: `https://static.qgov.net.au/formio-qld/${defaultVersion}/premium.css`,
   rel: "stylesheet"
-} // {
-//   type: "link",
-//   href: `https://dev-static.qgov.net.au/formio-qld/${version}/formio-qld.min.css`,
-//   rel: "stylesheet",
-// },
-];
+}, {
+  type: "link",
+  href: `https://dev-static.qgov.net.au/formio-qld/${defaultVersion}/formio-qld.min.css`,
+  rel: "stylesheet"
+}];
 const init = () => initScript(scripts);
 /******/ 	return __webpack_exports__;
 /******/ })()

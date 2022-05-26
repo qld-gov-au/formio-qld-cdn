@@ -17747,6 +17747,7 @@ __webpack_require__.d(components_namespaceObject, {
 var bootstrap_namespaceObject = {};
 __webpack_require__.r(bootstrap_namespaceObject);
 __webpack_require__.d(bootstrap_namespaceObject, {
+  "boilerplateButton": () => (boilerplateButton),
   "plsPlusAddress": () => (plsPlusAddress)
 });
 
@@ -17824,7 +17825,7 @@ var lodash_default = /*#__PURE__*/__webpack_require__.n(lodash);
   placeholder: "Enter Franchise API Key",
   weight: 10,
   tooltip: "You must have an API key in order to use this component.",
-  description: "You must have a API key in order to use this component, please contact <a href='mailto:qol.development@smartservice.qld.gov.au' target='_blank'>qol.development@smartservice.qld.gov.au</a>(TBC) if you want to acquire an API key. (To be confirmed)",
+  description: "You must have a API key in order to use this component, please refer to <a href='https://www.qld.gov.au/_resources/matrix-documentation/components/form.io-guides/form.io-plsplusaddress-component' target='_blank'>this doc</a> or contact <a href='mailto:online@smartservice.qld.gov.au' target='_blank'>online@smartservice.qld.gov.au</a> if you want to acquire an API key.",
   validate: {
     required: true
   }
@@ -18767,12 +18768,32 @@ PdfSubmitButton.editForm = PdfSubmitButton_form;
 ;// CONCATENATED MODULE: ./src/components/PdfSubmitButton/index.js
 
 ;// CONCATENATED MODULE: ./src/components/index.js
+/*
+ * this file is used for prod environment for bundling
+ *
+ */
 
 
+;// CONCATENATED MODULE: ./src/templates/bootstrap/boilerplateButton/form.ejs
+/* harmony default export */ const boilerplateButton_form = ("<!--\n  boilerplate from https://github.com/formio/formio.js/blob/master/src/templates/bootstrap/button/form.ejs\n-->\n<div class=\"mb-2\">\n  {{ctx.component.customDescription}}\n</div>\n<{{ctx.input.type}}\n  ref=\"button\"\n  {% for (var attr in ctx.input.attr) { %}\n  {{attr}}=\"{{ctx.input.attr[attr]}}\"\n  {% } %}\n  {% if (ctx.component.description) { %}\n    aria-describedby=\"d-{{ctx.instance.id}}-{{ctx.component.key}}\"\n  {% } %}\n>\n{% if (ctx.component.leftIcon) { %}<span class=\"{{ctx.component.leftIcon}}\"></span>&nbsp;{% } %}\n{{ctx.input.content}}\n{% if (ctx.component.tooltip) { %}\n  <i ref=\"tooltip\" class=\"{{ctx.iconClass('question-sign')}} text-muted\" data-tooltip=\"{{ctx.component.tooltip}}\"></i>\n{% } %}\n{% if (ctx.component.rightIcon) { %}&nbsp;<span class=\"{{ctx.component.rightIcon}}\"></span>{% } %}\n</div{{ctx.input.type}}>\n<div ref=\"buttonMessageContainer\">\n  <span class=\"help-block\" ref=\"buttonMessage\"></span>\n</div>\n");
+;// CONCATENATED MODULE: ./src/templates/bootstrap/boilerplateButton/html.ejs
+/* harmony default export */ const html = ("<!--\n  boilerplate from https://github.com/formio/formio.js/blob/master/src/templates/bootstrap/button/html.ejs\n-->");
+;// CONCATENATED MODULE: ./src/templates/bootstrap/boilerplateButton/index.js
+/*
+ * use form.io button template as BoilerplateButton
+ * https://github.com/formio/formio.js/blob/master/src/templates/bootstrap/button/index.js
+ *
+ */
+
+
+const boilerplateButton = {
+  form: boilerplateButton_form,
+  html: html
+};
 ;// CONCATENATED MODULE: ./src/templates/bootstrap/plsPlusAddress/form.ejs
 /* harmony default export */ const plsPlusAddress_form = ("<div class=\"address-autocomplete-container\">\n  <input\n    ref=\"{{ ctx.ref.searchInput }}\"\n    {% for (var attr in ctx.inputAttributes) { %}\n      {{attr}}=\"{{ctx.inputAttributes[attr]}}\"\n    {% } %}\n    value=\"{{ ctx.displayValue }}\"\n    autocomplete=\"off\"\n    aria-label=\"{{ctx.t('autocomplete')}}\"\n  >\n  {% if (!ctx.component.disableClearIcon) { %}\n    <i\n      class=\"address-autocomplete-remove-value-icon fa fa-times\"\n      tabindex=\"{{ ctx.inputAttributes.tabindex }}\"\n      ref=\"{{ ctx.ref.removeValueIcon }}\"\n    ></i>\n  {% } %}\n</div>\n{% if (!ctx.hasApiKey) { %}\n    <div class=\"form-text\">Please provide an API key in Provider to use the search function.</div>\n{% } %}\n{% if (ctx.self.manualModeEnabled) { %}\n  <div class=\"form-check checkbox\">\n    <label class=\"form-check-label\">\n      <input\n        ref=\"{{ ctx.ref.modeSwitcher }}\"\n        type=\"checkbox\"\n        class=\"form-check-input\"\n        tabindex=\"{{ ctx.inputAttributes.tabindex }}\"\n        {% if (ctx.mode.manual) { %}checked=true{% } %}\n        {% if (ctx.disabled) { %}disabled=true{% } %}\n      >\n      <span>{{ ctx.component.switchToManualModeLabel }}</span>\n    </label>\n  </div>\n{% } %}\n{% if (ctx.self.manualModeEnabled && ( ctx.mode.manual || ctx.displayValue)) { %}\n  <div ref=\"{{ ctx.nestedKey }}\">\n    {{ ctx.children }}\n  </div>\n{% } %}\n{% if (ctx.mode.manual) { %}\n<div>\n  <!-- Todo Link/function to improve the address database -->\n  <!-- <p><a href=\"#\" target=\"_blank\">Please take part to improve our address database if we couldn't find your address.</a></p> -->\n</div>\n{% } %}");
 ;// CONCATENATED MODULE: ./src/templates/bootstrap/plsPlusAddress/html.ejs
-/* harmony default export */ const html = ("<div ref=\"value\">{% if (ctx.displayValue) { %}{{ctx.displayValue}}{% } else { %}-{% } %}</div>");
+/* harmony default export */ const plsPlusAddress_html = ("<div ref=\"value\">{% if (ctx.displayValue) { %}{{ctx.displayValue}}{% } else { %}-{% } %}</div>");
 ;// CONCATENATED MODULE: ./src/templates/bootstrap/plsPlusAddress/index.js
 /*
  * use form.io Address template as boilerplate
@@ -18783,9 +18804,10 @@ PdfSubmitButton.editForm = PdfSubmitButton_form;
 
 const plsPlusAddress = {
   form: plsPlusAddress_form,
-  html: html
+  html: plsPlusAddress_html
 };
 ;// CONCATENATED MODULE: ./src/templates/bootstrap/index.js
+
 
 ;// CONCATENATED MODULE: ./src/templates/index.js
 
@@ -18963,7 +18985,7 @@ class PlsPlusAddressProvider extends CustomAddressProvider {
 
 
 
- // import "./style/formio-qld.scss";
+
 
 Formio.use({
   components: getComponents(components_namespaceObject),
