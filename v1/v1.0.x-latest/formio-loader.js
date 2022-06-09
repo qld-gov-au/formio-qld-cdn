@@ -152,7 +152,28 @@ var createForm_options_default = /*#__PURE__*/__webpack_require__.n(createForm_o
     if (formConfirmation) window.location.href = formConfirmation;
   });
 });
+;// CONCATENATED MODULE: ./src/utils/delegateSelector.js
+const delegateSelector = (elements, event, childSelector, handler) => {
+  const is = (el, s) => {
+    return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, s);
+  };
+
+  const addEvent = el => {
+    el.addEventListener(event, e => {
+      if (is(e.target, childSelector)) {
+        handler(e);
+      }
+    });
+  };
+
+  if (Array.isArray(elements)) {
+    [].forEach.call(elements, addEvent);
+  } else {
+    addEvent(elements);
+  }
+};
 ;// CONCATENATED MODULE: ./src/helpers/FormioLoader/FormioLoader.js
+
 
  // plugin function to fix the namespace/project option doesn't pass to Formio.makeRequest/Formio.makeStaticRequest
 
@@ -274,7 +295,7 @@ const initFormioInstance = (elem, opts) => {
       opts.createFormCallback(callbackProps);
     } else {
       // Force new tab on formlinks
-      $(elem).on("click", `a`, e => {
+      delegateSelector(elem, "click", "a", e => {
         e.target.target = "_blank";
       });
     } // default controller

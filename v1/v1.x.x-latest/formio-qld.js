@@ -18812,7 +18812,8 @@ const plsPlusAddress = {
 ;// CONCATENATED MODULE: ./src/templates/index.js
 
 /* harmony default export */ const templates = ({
-  bootstrap: bootstrap_namespaceObject
+  bootstrap: bootstrap_namespaceObject,
+  bootstrap3: bootstrap_namespaceObject
 });
 ;// CONCATENATED MODULE: ./src/providers/address/PlsPlusAddressProvider.js
 
