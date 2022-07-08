@@ -7,7 +7,7 @@
 		exports["FormioQld"] = factory();
 	else
 		root["FormioQld"] = factory();
-})(globalThis, function() {
+})(self, function() {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -17794,9 +17794,12 @@ var lodash_default = /*#__PURE__*/__webpack_require__.n(lodash);
   validate: {
     required: true
   },
-  customConditional: ({
-    data
-  }) => Boolean(data.enableManualMode)
+  customConditional: _ref => {
+    let {
+      data
+    } = _ref;
+    return Boolean(data.enableManualMode);
+  }
 }, {
   weight: 40,
   type: "checkbox",
@@ -17812,9 +17815,12 @@ var lodash_default = /*#__PURE__*/__webpack_require__.n(lodash);
   placeholder: "Add Another",
   weight: 410,
   input: true,
-  customConditional: ({
-    data
-  }) => data.multiple
+  customConditional: _ref2 => {
+    let {
+      data
+    } = _ref2;
+    return data.multiple;
+  }
 }]);
 ;// CONCATENATED MODULE: ./src/components/PlsPlusAddress/editForm/PlsPlusAddress.edit.provider.js
 /* harmony default export */ const PlsPlusAddress_edit_provider = ([{
@@ -17849,7 +17855,11 @@ var lodash_default = /*#__PURE__*/__webpack_require__.n(lodash);
 
 
 const baseEditForm = Formio.Components.components.base.editForm;
-/* harmony default export */ const PlsPlusAddress_form = ((...extend) => {
+/* harmony default export */ const PlsPlusAddress_form = (function () {
+  for (var _len = arguments.length, extend = new Array(_len), _key = 0; _key < _len; _key++) {
+    extend[_key] = arguments[_key];
+  }
+
   return baseEditForm([{
     key: "data",
     components: PlsPlusAddress_edit_data
@@ -17888,12 +17898,16 @@ const addressValidation = {
 };
 const addressKeys = ["autocompleteAddress", "selectedAddress", "mode", "address1", "address2", "address3", "city", "state", "postcode"];
 class PlsPlusAddress extends FieldsetComponent {
-  constructor(...args) {
-    super(...args);
+  constructor() {
+    super(...arguments);
     this.noField = false;
   }
 
-  static schema(...extend) {
+  static schema() {
+    for (var _len = arguments.length, extend = new Array(_len), _key = 0; _key < _len; _key++) {
+      extend[_key] = arguments[_key];
+    }
+
     return FieldsetComponent.schema({
       type: "plsplusaddress",
       label: "PlsPlus Address",
@@ -18006,7 +18020,8 @@ class PlsPlusAddress extends FieldsetComponent {
     return this.components || [];
   }
 
-  mergeSchema(component = {}) {
+  mergeSchema() {
+    let component = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     let {
       defaultSchema
     } = this;
@@ -18061,7 +18076,8 @@ class PlsPlusAddress extends FieldsetComponent {
     return super.init();
   }
 
-  initializeProvider(provider, options = {}) {
+  initializeProvider(provider) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const Provider = Formio.Providers.getProvider("address", provider);
     return new Provider({ ...options
     });
@@ -18112,14 +18128,26 @@ class PlsPlusAddress extends FieldsetComponent {
   }
 
   get container() {
-    return this.getComponents().find(comp => comp.originalComponent.tags?.includes("container"));
+    return this.getComponents().find(comp => {
+      var _comp$originalCompone;
+
+      return (_comp$originalCompone = comp.originalComponent.tags) === null || _comp$originalCompone === void 0 ? void 0 : _comp$originalCompone.includes("container");
+    });
   }
 
   get address() {
-    const dataValue = this.container?.dataValue;
+    var _this$container;
+
+    const dataValue = (_this$container = this.container) === null || _this$container === void 0 ? void 0 : _this$container.dataValue;
     const addressData = addressKeys.map(k => {
       if (this.container) {
-        const componentKey = this.container.getComponents().find(comp => comp.originalComponent.tags?.includes(k))?.component.key;
+        var _this$container$getCo;
+
+        const componentKey = (_this$container$getCo = this.container.getComponents().find(comp => {
+          var _comp$originalCompone2;
+
+          return (_comp$originalCompone2 = comp.originalComponent.tags) === null || _comp$originalCompone2 === void 0 ? void 0 : _comp$originalCompone2.includes(k);
+        })) === null || _this$container$getCo === void 0 ? void 0 : _this$container$getCo.component.key;
         return {
           [k]: dataValue[componentKey]
         };
@@ -18136,7 +18164,13 @@ class PlsPlusAddress extends FieldsetComponent {
 
     if (this.container) {
       addressKeys.forEach(k => {
-        const componentKey = this.container.getComponents().find(comp => comp.originalComponent.tags?.includes(k))?.component.key;
+        var _this$container$getCo2;
+
+        const componentKey = (_this$container$getCo2 = this.container.getComponents().find(comp => {
+          var _comp$originalCompone3;
+
+          return (_comp$originalCompone3 = comp.originalComponent.tags) === null || _comp$originalCompone3 === void 0 ? void 0 : _comp$originalCompone3.includes(k);
+        })) === null || _this$container$getCo2 === void 0 ? void 0 : _this$container$getCo2.component.key;
 
         if (this.container.dataValue[componentKey] !== value[k]) {
           this.container.dataValue[componentKey] = value[k];
@@ -18158,7 +18192,9 @@ class PlsPlusAddress extends FieldsetComponent {
   }
 
   restoreComponentsContext() {
-    this.container?.getComponents().forEach(component => {
+    var _this$container2;
+
+    (_this$container2 = this.container) === null || _this$container2 === void 0 ? void 0 : _this$container2.getComponents().forEach(component => {
       component.data = this.container.dataValue;
       component.setValue(component.dataValue, {
         noUpdateEvent: true
@@ -18166,7 +18202,8 @@ class PlsPlusAddress extends FieldsetComponent {
     });
   }
 
-  setValue(value, flags = {}) {
+  setValue(value) {
+    let flags = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     // const changed = Field.prototype.setValue.call(this, value, flags);
     this.restoreComponentsContext();
 
@@ -18204,6 +18241,8 @@ class PlsPlusAddress extends FieldsetComponent {
   }
 
   get searchInputAttributes() {
+    var _this$component$provi, _this$component$provi2;
+
     const attr = {
       name: this.options.name,
       type: "text",
@@ -18216,7 +18255,7 @@ class PlsPlusAddress extends FieldsetComponent {
       attr.placeholder = this.t(this.component.placeholder);
     }
 
-    if (this.disabled || this.manualMode || !this.component.providerOptions?.params?.apiKey) {
+    if (this.disabled || this.manualMode || !((_this$component$provi = this.component.providerOptions) !== null && _this$component$provi !== void 0 && (_this$component$provi2 = _this$component$provi.params) !== null && _this$component$provi2 !== void 0 && _this$component$provi2.apiKey)) {
       attr.disabled = "disabled";
     }
 
@@ -18234,7 +18273,9 @@ class PlsPlusAddress extends FieldsetComponent {
   }
 
   renderElement(value) {
-    this.container?.getComponents().forEach(component => {
+    var _this$container3, _this$component$provi3, _this$component$provi4;
+
+    (_this$container3 = this.container) === null || _this$container3 === void 0 ? void 0 : _this$container3.getComponents().forEach(component => {
       if (!this.builderMode && this.attached) {
         component.disabled = component.originalComponent.disabled || !this.manualMode;
         component.component.validate = !this.manualMode ? {} : component.originalComponent.validate;
@@ -18250,9 +18291,11 @@ class PlsPlusAddress extends FieldsetComponent {
     });
 
     if (!this.builderMode && this.attached) {
-      this.component.validate = { ...(this.originalComponent?.validate?.required && {
-          custom: `valid = !!instance.address.selectedAddress;`,
-          customMessage: `${this.component.label} is required.`,
+      var _this$originalCompone, _this$originalCompone2;
+
+      this.component.validate = { ...(((_this$originalCompone = this.originalComponent) === null || _this$originalCompone === void 0 ? void 0 : (_this$originalCompone2 = _this$originalCompone.validate) === null || _this$originalCompone2 === void 0 ? void 0 : _this$originalCompone2.required) && {
+          custom: "valid = !!instance.address.selectedAddress;",
+          customMessage: "".concat(this.component.label, " is required."),
           required: !this.manualMode
         })
       };
@@ -18272,7 +18315,7 @@ class PlsPlusAddress extends FieldsetComponent {
         autocomplete: this.autocompleteMode,
         manual: this.manualMode
       },
-      hasApiKey: !!this.component.providerOptions?.params?.apiKey
+      hasApiKey: !!((_this$component$provi3 = this.component.providerOptions) !== null && _this$component$provi3 !== void 0 && (_this$component$provi4 = _this$component$provi3.params) !== null && _this$component$provi4 !== void 0 && _this$component$provi4.apiKey)
     });
   }
 
@@ -18334,7 +18377,7 @@ class PlsPlusAddress extends FieldsetComponent {
               };
               this.restoreComponentsContext();
               this.container.getComponents().forEach(component => {
-                const childElement = document.getElementById(`${component.id}-${component.component.key}`);
+                const childElement = document.getElementById("".concat(component.id, "-").concat(component.component.key));
                 if (childElement) childElement.value = component.dataValue;
               });
             });
@@ -18378,7 +18421,9 @@ class PlsPlusAddress extends FieldsetComponent {
         this.updateRemoveIcon(index);
 
         const removeValueHandler = () => {
-          const searchInput = this.searchInput?.[index];
+          var _this$searchInput;
+
+          const searchInput = (_this$searchInput = this.searchInput) === null || _this$searchInput === void 0 ? void 0 : _this$searchInput[index];
           this.clearAddress(searchInput, index);
 
           if (searchInput) {
@@ -18387,9 +18432,11 @@ class PlsPlusAddress extends FieldsetComponent {
         };
 
         this.addEventListener(removeValueIcon, "click", removeValueHandler);
-        this.addEventListener(removeValueIcon, "keydown", ({
-          key
-        }) => {
+        this.addEventListener(removeValueIcon, "keydown", _ref => {
+          let {
+            key
+          } = _ref;
+
           if (key === "Enter") {
             removeValueHandler();
           }
@@ -18417,26 +18464,31 @@ class PlsPlusAddress extends FieldsetComponent {
   }
 
   clearAddress(element, index) {
+    var _this$container4;
+
     this.address = this.emptyValue.address;
 
     if (element) {
       element.value = "";
     }
 
-    this.container?.getComponents().forEach(component => {
-      const childElement = document.getElementById(`${component.id}-${component.component.key}`);
+    (_this$container4 = this.container) === null || _this$container4 === void 0 ? void 0 : _this$container4.getComponents().forEach(component => {
+      const childElement = document.getElementById("".concat(component.id, "-").concat(component.component.key));
       if (childElement) childElement.value = component.dataValue;
     });
     this.updateRemoveIcon(index);
     this.redraw();
   }
 
-  getDisplayValue(value = this.address) {
+  getDisplayValue() {
+    let value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.address;
     return this.provider ? this.provider.getDisplayValue(value) : "";
   }
 
   updateRemoveIcon(index) {
-    const removeValueIcon = this.removeValueIcon?.[index];
+    var _this$removeValueIcon;
+
+    const removeValueIcon = (_this$removeValueIcon = this.removeValueIcon) === null || _this$removeValueIcon === void 0 ? void 0 : _this$removeValueIcon[index];
 
     if (removeValueIcon) {
       const value = this.address;
@@ -18467,7 +18519,7 @@ PlsPlusAddress.editForm = PlsPlusAddress_form;
  */
 /* harmony default export */ const PdfSubmitButton_edit_display = ([{
   type: "content",
-  html: `<h2>This component is still in development and not a stable version.</h2><h2>Please follow <a href="#" target="_blank">this guide</a> to setup the form action before using this component.</h2>`,
+  html: "<h2>This component is still in development and not a stable version.</h2><h2>Please follow <a href=\"#\" target=\"_blank\">this guide</a> to setup the form action before using this component.</h2>",
   input: false,
   weight: -10
 }, {
@@ -18653,7 +18705,11 @@ PlsPlusAddress.editForm = PlsPlusAddress_form;
  */
 
 const PdfSubmitButton_form_baseEditForm = Formio.Components.components.base.editForm;
-/* harmony default export */ const PdfSubmitButton_form = ((...extend) => {
+/* harmony default export */ const PdfSubmitButton_form = (function () {
+  for (var _len = arguments.length, extend = new Array(_len), _key = 0; _key < _len; _key++) {
+    extend[_key] = arguments[_key];
+  }
+
   return PdfSubmitButton_form_baseEditForm([{
     key: "display",
     components: PdfSubmitButton_edit_display
@@ -18677,7 +18733,11 @@ const PdfSubmitButton_form_baseEditForm = Formio.Components.components.base.edit
 
 const Button = Formio.Components.components.button;
 class PdfSubmitButton extends Button {
-  static schema(...extend) {
+  static schema() {
+    for (var _len = arguments.length, extend = new Array(_len), _key = 0; _key < _len; _key++) {
+      extend[_key] = arguments[_key];
+    }
+
     return Button.schema({
       type: "pdfsubmitbutton",
       label: "Submit",
@@ -18697,8 +18757,10 @@ class PdfSubmitButton extends Button {
   }
 
   init() {
+    var _this$root, _this$root$options;
+
     // hide the default submit button if it is a wizard
-    if (this.root?.options?.buttonSettings) this.root.options.buttonSettings.showSubmit = false;
+    if ((_this$root = this.root) !== null && _this$root !== void 0 && (_this$root$options = _this$root.options) !== null && _this$root$options !== void 0 && _this$root$options.buttonSettings) this.root.options.buttonSettings.showSubmit = false;
     super.init();
   }
 
@@ -18707,8 +18769,10 @@ class PdfSubmitButton extends Button {
 
     if (this.component.action === "submit") {
       this.on(this.component.debugMode ? "submit" : "submitDone", e => {
+        var _e$metadata, _e$metadata$pdfUrl;
+
         // get the pdf DownloadUrl from submission response, the action name setup in the form needed to be `pdfUrl`
-        const pdfUrl = this.component.debugMode ? this.component.debugPdfUrl : e?.metadata?.pdfUrl?.DownloadUrl;
+        const pdfUrl = this.component.debugMode ? this.component.debugPdfUrl : e === null || e === void 0 ? void 0 : (_e$metadata = e.metadata) === null || _e$metadata === void 0 ? void 0 : (_e$metadata$pdfUrl = _e$metadata.pdfUrl) === null || _e$metadata$pdfUrl === void 0 ? void 0 : _e$metadata$pdfUrl.DownloadUrl;
         const {
           downloadSuccessMessage,
           downloadFailedMessage,
@@ -18726,24 +18790,9 @@ class PdfSubmitButton extends Button {
         const failedMessageClass = downloadFailedMessageClass || ""; // replace form div container with downloadSuccessMessage
 
         if (pdfUrl) {
-          this.root.element.innerHTML = `
-              <div class="${successMessageClass}">
-                ${downloadSuccessMessage ? `<div class="mb-3 download-success-message-container">${downloadSuccessMessage}</div>` : ""}
-                <div class="download-button-container">
-                  <a href="${pdfUrl}" class="${className}" target="${target}" />
-                    ${label}
-                  </a>
-                </div>
-              </div>
-            `;
+          this.root.element.innerHTML = "\n              <div class=\"".concat(successMessageClass, "\">\n                ").concat(downloadSuccessMessage ? "<div class=\"mb-3 download-success-message-container\">".concat(downloadSuccessMessage, "</div>") : "", "\n                <div class=\"download-button-container\">\n                  <a href=\"").concat(pdfUrl, "\" class=\"").concat(className, "\" target=\"").concat(target, "\" />\n                    ").concat(label, "\n                  </a>\n                </div>\n              </div>\n            ");
         } else {
-          this.root.element.innerHTML = `
-              <div class="${failedMessageClass}">
-                <div class="download-failed-message-container">
-                  ${downloadFailedMessage}
-                </div>
-              </div>
-            `;
+          this.root.element.innerHTML = "\n              <div class=\"".concat(failedMessageClass, "\">\n                <div class=\"download-failed-message-container\">\n                  ").concat(downloadFailedMessage, "\n                </div>\n              </div>\n            ");
         }
 
         this.root.element.scrollIntoView();
@@ -18897,11 +18946,13 @@ class PlsPlusAddressProvider extends CustomAddressProvider {
   }
 
   breakAddress(address) {
+    var _address$Parcel, _address$Unit, _address$Unit2, _address$Level, _address$Level2, _address$RoadNumber, _address$RoadNumber2, _address$RoadNumber3, _address$Road, _address$Road2, _address$Road3;
+
     const siteName = address.SiteName || "";
-    const lot = address.Parcel?.Lot ? `LOT ${address.Parcel.Lot}` : undefined;
-    const complexDesc = [lot, address.Unit?.TypeCode, address.Unit?.Number, address.Level?.TypeCode, address.Level?.Number].filter(o => o !== undefined).join(" ");
-    const roadNumberPart = [address.RoadNumber?.First, address.RoadNumber?.Last ? "-" : undefined, address.RoadNumber?.Last].filter(o => o !== undefined).join("");
-    const streetAddress = [roadNumberPart, address.Road?.Name, address.Road?.TypeCode, address.Road?.Suffix].filter(o => o !== undefined).join(" ");
+    const lot = (_address$Parcel = address.Parcel) !== null && _address$Parcel !== void 0 && _address$Parcel.Lot ? "LOT ".concat(address.Parcel.Lot) : undefined;
+    const complexDesc = [lot, (_address$Unit = address.Unit) === null || _address$Unit === void 0 ? void 0 : _address$Unit.TypeCode, (_address$Unit2 = address.Unit) === null || _address$Unit2 === void 0 ? void 0 : _address$Unit2.Number, (_address$Level = address.Level) === null || _address$Level === void 0 ? void 0 : _address$Level.TypeCode, (_address$Level2 = address.Level) === null || _address$Level2 === void 0 ? void 0 : _address$Level2.Number].filter(o => o !== undefined).join(" ");
+    const roadNumberPart = [(_address$RoadNumber = address.RoadNumber) === null || _address$RoadNumber === void 0 ? void 0 : _address$RoadNumber.First, (_address$RoadNumber2 = address.RoadNumber) !== null && _address$RoadNumber2 !== void 0 && _address$RoadNumber2.Last ? "-" : undefined, (_address$RoadNumber3 = address.RoadNumber) === null || _address$RoadNumber3 === void 0 ? void 0 : _address$RoadNumber3.Last].filter(o => o !== undefined).join("");
+    const streetAddress = [roadNumberPart, (_address$Road = address.Road) === null || _address$Road === void 0 ? void 0 : _address$Road.Name, (_address$Road2 = address.Road) === null || _address$Road2 === void 0 ? void 0 : _address$Road2.TypeCode, (_address$Road3 = address.Road) === null || _address$Road3 === void 0 ? void 0 : _address$Road3.Suffix].filter(o => o !== undefined).join(" ");
     const addressLine = {
       siteName,
       lot,
@@ -18922,13 +18973,15 @@ class PlsPlusAddressProvider extends CustomAddressProvider {
     };
   }
 
-  makeParseRequest(options = {}) {
+  makeParseRequest() {
+    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     return Formio.makeStaticRequest(this.getParseRequestUrl(options), "GET", null, {
       noToken: true
     });
   }
 
-  parseAddress(query, options = {}) {
+  parseAddress(query) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const requestOptions = this.getRequestOptions(options);
     const params = requestOptions.params || {};
     params[this.queryProperty] = query.trim();
@@ -18940,7 +18993,8 @@ class PlsPlusAddressProvider extends CustomAddressProvider {
     });
   }
 
-  search(query, options = {}) {
+  search(query) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const requestOptions = this.getRequestOptions(options);
     const params = requestOptions.params || {};
     params[this.queryProperty] = query.trim();
@@ -18951,20 +19005,22 @@ class PlsPlusAddressProvider extends CustomAddressProvider {
     return lodash_default().isEmpty(address) ? "" : lodash_default().get(address, this.displayValueProperty, "");
   }
 
-  getRequestUrl(options = {}) {
+  getRequestUrl() {
+    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     const {
       params,
       apiBase
     } = options;
-    return `${apiBase || defaultApiBase}/pls-plus-qg/AutoCompleteAddress?${this.serialize(params)}`;
+    return "".concat(apiBase || defaultApiBase, "/pls-plus-qg/AutoCompleteAddress?").concat(this.serialize(params));
   }
 
-  getParseRequestUrl(options = {}) {
+  getParseRequestUrl() {
+    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     const {
       params,
       apiBase
     } = options;
-    return `${apiBase || defaultApiBase}/pls-plus-qg/ParseAddress?${this.serialize(params)}`;
+    return "".concat(apiBase || defaultApiBase, "/pls-plus-qg/ParseAddress?").concat(this.serialize(params));
   }
 
 }
