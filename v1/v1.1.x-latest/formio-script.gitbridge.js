@@ -7,7 +7,7 @@
 		exports["FormioScript"] = factory();
 	else
 		root["FormioScript"] = factory();
-})(globalThis, function() {
+})(self, function() {
 return /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The require scope
@@ -69,7 +69,7 @@ const createScripts = (scripts, i, mainResolve) => {
     rel
   } = scripts[i];
 
-  if (!document.querySelector(`${type}[src='${src}']`) && !document.querySelector(`${type}[href='${href}']`)) {
+  if (!document.querySelector("".concat(type, "[src='").concat(src, "']")) && !document.querySelector("".concat(type, "[href='").concat(href, "']"))) {
     const promise = new Promise(resolve => {
       const elem = document.createElement(type);
       if (async !== undefined) elem.setAttribute("async", async);
@@ -90,38 +90,39 @@ const createScripts = (scripts, i, mainResolve) => {
     createScripts(scripts, i + 1, mainResolve);
   }
 };
-const getDefaultScripts = ({
-  subdomain,
-  version = defaultVersion
-}) => {
+const getDefaultScripts = _ref => {
+  let {
+    subdomain,
+    version = defaultVersion
+  } = _ref;
   return [{
     type: "script",
-    src: `https://${subdomain}.qgov.net.au/formio-qld/${version}/formio.full.js`,
+    src: "https://".concat(subdomain, ".qgov.net.au/formio-qld/").concat(version, "/formio.full.js"),
     async: false
   }, {
     type: "script",
-    src: `https://${subdomain}.qgov.net.au/formio-qld/${version}/premium.min.js`,
+    src: "https://".concat(subdomain, ".qgov.net.au/formio-qld/").concat(version, "/premium.min.js"),
     async: false
   }, {
     type: "script",
-    src: `https://${subdomain}.qgov.net.au/formio-qld/${version}/formio-qld.js`,
+    src: "https://".concat(subdomain, ".qgov.net.au/formio-qld/").concat(version, "/formio-qld.js"),
     async: false
   }, // note: formio-loader should always load last
   {
     type: "script",
-    src: `https://${subdomain}.qgov.net.au/formio-qld/${version}/formio-loader.js`,
+    src: "https://".concat(subdomain, ".qgov.net.au/formio-qld/").concat(version, "/formio-loader.js"),
     async: false
   }, {
     type: "link",
-    href: `https://${subdomain}.qgov.net.au/formio-qld/${version}/formio.full.min.css`,
+    href: "https://".concat(subdomain, ".qgov.net.au/formio-qld/").concat(version, "/formio.full.min.css"),
     rel: "stylesheet"
   }, {
     type: "link",
-    href: `https://${subdomain}.qgov.net.au/formio-qld/${version}/premium.css`,
+    href: "https://".concat(subdomain, ".qgov.net.au/formio-qld/").concat(version, "/premium.css"),
     rel: "stylesheet"
   }, {
     type: "link",
-    href: `https://${subdomain}.qgov.net.au/formio-qld/${version}/formio-qld.min.css`,
+    href: "https://".concat(subdomain, ".qgov.net.au/formio-qld/").concat(version, "/formio-qld.min.css"),
     rel: "stylesheet"
   }];
 };
@@ -143,32 +144,32 @@ const initScript = scripts => new Promise(resolve => {
 const version = window.formioQldCdnVersion || "248740";
 const scripts = [{
   type: "script",
-  src: `/__data/assets/git_bridge/0025/${version}/formio.full.js`,
+  src: "/__data/assets/git_bridge/0025/".concat(version, "/formio.full.js"),
   async: false
 }, {
   type: "script",
-  src: `/__data/assets/git_bridge/0025/${version}/premium.min.js`,
+  src: "/__data/assets/git_bridge/0025/".concat(version, "/premium.min.js"),
   async: false
 }, {
   type: "script",
-  src: `/__data/assets/git_bridge/0025/${version}/formio-qld.js`,
+  src: "/__data/assets/git_bridge/0025/".concat(version, "/formio-qld.js"),
   async: false
 }, // note: formio-loader should always load last
 {
   type: "script",
-  src: `/__data/assets/git_bridge/0025/${version}/formio-loader.js`,
+  src: "/__data/assets/git_bridge/0025/".concat(version, "/formio-loader.js"),
   async: false
 }, {
   type: "link",
-  href: `/__data/assets/git_bridge/0025/${version}/formio.full.min.css`,
+  href: "/__data/assets/git_bridge/0025/".concat(version, "/formio.full.min.css"),
   rel: "stylesheet"
 }, {
   type: "link",
-  href: `/__data/assets/git_bridge/0025/${version}/premium.css`,
+  href: "/__data/assets/git_bridge/0025/".concat(version, "/premium.css"),
   rel: "stylesheet"
 }, {
   type: "link",
-  href: `/__data/assets/git_bridge/0025/${version}/formio-qld.min.css`,
+  href: "/__data/assets/git_bridge/0025/".concat(version, "/formio-qld.min.css"),
   rel: "stylesheet"
 }];
 const init = () => initScript(scripts);

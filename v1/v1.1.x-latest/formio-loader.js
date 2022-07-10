@@ -7,7 +7,7 @@
 		exports["FormioLoader"] = factory();
 	else
 		root["FormioLoader"] = factory();
-})(globalThis, function() {
+})(self, function() {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -117,10 +117,11 @@ __webpack_require__.d(__webpack_exports__, {
 var createForm_options = __webpack_require__(203);
 var createForm_options_default = /*#__PURE__*/__webpack_require__.n(createForm_options);
 ;// CONCATENATED MODULE: ./src/config/createForm.controller.js
-/* harmony default export */ const createForm_controller = (({
-  form,
-  formConfirmation
-}) => {
+/* harmony default export */ const createForm_controller = (_ref => {
+  let {
+    form,
+    formConfirmation
+  } = _ref;
   // Change event/GTM
   form.on("change", e => {
     // eslint-disable-next-line no-underscore-dangle
@@ -139,7 +140,7 @@ var createForm_options_default = /*#__PURE__*/__webpack_require__.n(createForm_o
         "formio-input-key": e.changed.component.key,
         "formio-input-label-raw": e.changed.component.label,
         "formio-version": formModified,
-        "formio-category": `Form: ${formTitle}`,
+        "formio-category": "Form: ".concat(formTitle),
         "formio-action": "filled in"
       });
     }
@@ -178,8 +179,10 @@ const delegateSelector = (elements, event, childSelector, handler) => {
  // plugin function to fix the namespace/project option doesn't pass to Formio.makeRequest/Formio.makeStaticRequest
 
 const requestPluginHandler = (requestArgs, opts) => {
-  if (requestArgs?.formio) {
-    const formioInstance = document.querySelector(`[data-formio-form-url="${requestArgs.formio.formUrl}"]`);
+  var _requestArgs$url;
+
+  if (requestArgs !== null && requestArgs !== void 0 && requestArgs.formio) {
+    const formioInstance = document.querySelector("[data-formio-form-url=\"".concat(requestArgs.formio.formUrl, "\"]"));
 
     if (formioInstance) {
       requestArgs.formio = JSON.parse(formioInstance.dataset.formio);
@@ -198,8 +201,8 @@ const requestPluginHandler = (requestArgs, opts) => {
   // hence the workaround is to inject the project id to the url
 
 
-  if (requestArgs?.url?.includes(`${opts.formio.base}/recaptcha`)) {
-    requestArgs.url = requestArgs.url.replace(`${opts.formio.base}/recaptcha`, `${opts.formio.projectUrl}/recaptcha`);
+  if (requestArgs !== null && requestArgs !== void 0 && (_requestArgs$url = requestArgs.url) !== null && _requestArgs$url !== void 0 && _requestArgs$url.includes("".concat(opts.formio.base, "/recaptcha"))) {
+    requestArgs.url = requestArgs.url.replace("".concat(opts.formio.base, "/recaptcha"), "".concat(opts.formio.projectUrl, "/recaptcha"));
   }
 
   return Promise.resolve(null);
@@ -239,11 +242,11 @@ const initFormioInstance = (elem, opts) => {
    */
 
 
-  const baseUrl = `https://${opts.envUrl.trim()}`;
+  const baseUrl = "https://".concat(opts.envUrl.trim());
   let formName = ""; // Check if value is true/exists and is numeric
 
   if (opts.formRevision) {
-    formName = `${opts.formName}/v/${opts.formRevision}`;
+    formName = "".concat(opts.formName, "/v/").concat(opts.formRevision);
   } else {
     formName = opts.formName;
   }
@@ -251,15 +254,15 @@ const initFormioInstance = (elem, opts) => {
   const {
     projectName
   } = opts;
-  const namespace = opts.namespace || `formio-${projectName}`;
-  const formUrl = `${baseUrl}/${projectName}/${formName}`;
+  const namespace = opts.namespace || "formio-".concat(projectName);
+  const formUrl = "".concat(baseUrl, "/").concat(projectName, "/").concat(formName);
   /*
    * init formio instance
    */
 
   const formio = new Formio(formUrl, {
     base: baseUrl,
-    project: `${baseUrl}/${projectName}`,
+    project: "".concat(baseUrl, "/").concat(projectName),
     namespace
   });
   elem.dataset.formio = JSON.stringify(formio);
