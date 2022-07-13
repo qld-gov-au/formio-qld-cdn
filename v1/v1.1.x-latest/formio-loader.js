@@ -22,6 +22,7 @@ module.exports = {
     showNext: true,
     showSubmit: true
   },
+  // https://help.form.io/developers/translations#introduction
   i18n: {
     en: {
       pattern: "Must use the format shown",
@@ -312,18 +313,22 @@ const initFormioInstance = (elem, opts) => {
   });
 };
 
-const defaultInitFormioAction = () => {
+const overrideErrorForm = renderMsg => {
   // customise error message
   const newFunc = Formio.Form.prototype.errorForm.bind({});
 
   Formio.Form.prototype.errorForm = err => {
     if (typeof err === "string" && err.indexOf("Could not connect to API server") !== -1 || typeof err === "object" && err.networkError) {
       console.warn("formio error: ", err);
-      return newFunc("This form is currently unavailable due to maintenance. Please try again later.");
+      return newFunc(typeof renderMsg === "function" ? renderMsg(err) : err);
     }
 
     return newFunc(err);
   };
+};
+
+const defaultInitFormioAction = () => {
+  overrideErrorForm(() => "This form is currently unavailable due to maintenance. Please try again later.");
 };
 
 const initFormio = () => {
@@ -332,7 +337,9 @@ const initFormio = () => {
   if (premium) Formio.use(premium); // default callback after Formio is loaded
 
   if (typeof window.initFormioHook === "function") {
-    window.initFormioHook();
+    window.initFormioHook({
+      overrideErrorForm
+    });
   } else {
     defaultInitFormioAction();
   }

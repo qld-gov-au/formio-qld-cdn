@@ -168,7 +168,7 @@ const scripts = [{
   rel: "stylesheet"
 }, {
   type: "link",
-  href: "https://dev-static.qgov.net.au/formio-qld/".concat(defaultVersion, "/formio-qld.min.css"),
+  href: "https://static.qgov.net.au/formio-qld/".concat(defaultVersion, "/formio-qld.min.css"),
   rel: "stylesheet"
 }];
 const init = () => initScript(scripts);
