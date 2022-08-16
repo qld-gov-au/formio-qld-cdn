@@ -164,10 +164,11 @@ const pushDataLayer = data => {
     }, 500);
   });
   form.on("submitError", error => {
+    const msg = Array.isArray(error) ? error.map(o => o.message).join(", ") : (error === null || error === void 0 ? void 0 : error.message) || error;
     pushDataLayer({
       event: "ngErrorEvent",
       ngErrorLocation: form._form.title,
-      ngErrorMsg: (error === null || error === void 0 ? void 0 : error.message) || error,
+      ngErrorMsg: msg,
       ngErrorStack: ""
     });
   });
