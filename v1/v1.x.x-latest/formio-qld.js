@@ -17634,387 +17634,6 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 }.call(this));
 
 
-/***/ }),
-
-/***/ 459:
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_RESULT__;/*! Native Promise Only
-    v0.8.1 (c) Kyle Simpson
-    MIT License: http://getify.mit-license.org
-*/
-
-(function UMD(name,context,definition){
-	// special form of UMD for polyfilling across evironments
-	context[name] = context[name] || definition();
-	if ( true && module.exports) { module.exports = context[name]; }
-	else if (true) { !(__WEBPACK_AMD_DEFINE_RESULT__ = (function $AMD$(){ return context[name]; }).call(exports, __webpack_require__, exports, module),
-		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)); }
-})("Promise",typeof __webpack_require__.g != "undefined" ? __webpack_require__.g : this,function DEF(){
-	/*jshint validthis:true */
-	"use strict";
-
-	var builtInProp, cycle, scheduling_queue,
-		ToString = Object.prototype.toString,
-		timer = (typeof setImmediate != "undefined") ?
-			function timer(fn) { return setImmediate(fn); } :
-			setTimeout
-	;
-
-	// dammit, IE8.
-	try {
-		Object.defineProperty({},"x",{});
-		builtInProp = function builtInProp(obj,name,val,config) {
-			return Object.defineProperty(obj,name,{
-				value: val,
-				writable: true,
-				configurable: config !== false
-			});
-		};
-	}
-	catch (err) {
-		builtInProp = function builtInProp(obj,name,val) {
-			obj[name] = val;
-			return obj;
-		};
-	}
-
-	// Note: using a queue instead of array for efficiency
-	scheduling_queue = (function Queue() {
-		var first, last, item;
-
-		function Item(fn,self) {
-			this.fn = fn;
-			this.self = self;
-			this.next = void 0;
-		}
-
-		return {
-			add: function add(fn,self) {
-				item = new Item(fn,self);
-				if (last) {
-					last.next = item;
-				}
-				else {
-					first = item;
-				}
-				last = item;
-				item = void 0;
-			},
-			drain: function drain() {
-				var f = first;
-				first = last = cycle = void 0;
-
-				while (f) {
-					f.fn.call(f.self);
-					f = f.next;
-				}
-			}
-		};
-	})();
-
-	function schedule(fn,self) {
-		scheduling_queue.add(fn,self);
-		if (!cycle) {
-			cycle = timer(scheduling_queue.drain);
-		}
-	}
-
-	// promise duck typing
-	function isThenable(o) {
-		var _then, o_type = typeof o;
-
-		if (o != null &&
-			(
-				o_type == "object" || o_type == "function"
-			)
-		) {
-			_then = o.then;
-		}
-		return typeof _then == "function" ? _then : false;
-	}
-
-	function notify() {
-		for (var i=0; i<this.chain.length; i++) {
-			notifyIsolated(
-				this,
-				(this.state === 1) ? this.chain[i].success : this.chain[i].failure,
-				this.chain[i]
-			);
-		}
-		this.chain.length = 0;
-	}
-
-	// NOTE: This is a separate function to isolate
-	// the `try..catch` so that other code can be
-	// optimized better
-	function notifyIsolated(self,cb,chain) {
-		var ret, _then;
-		try {
-			if (cb === false) {
-				chain.reject(self.msg);
-			}
-			else {
-				if (cb === true) {
-					ret = self.msg;
-				}
-				else {
-					ret = cb.call(void 0,self.msg);
-				}
-
-				if (ret === chain.promise) {
-					chain.reject(TypeError("Promise-chain cycle"));
-				}
-				else if (_then = isThenable(ret)) {
-					_then.call(ret,chain.resolve,chain.reject);
-				}
-				else {
-					chain.resolve(ret);
-				}
-			}
-		}
-		catch (err) {
-			chain.reject(err);
-		}
-	}
-
-	function resolve(msg) {
-		var _then, self = this;
-
-		// already triggered?
-		if (self.triggered) { return; }
-
-		self.triggered = true;
-
-		// unwrap
-		if (self.def) {
-			self = self.def;
-		}
-
-		try {
-			if (_then = isThenable(msg)) {
-				schedule(function(){
-					var def_wrapper = new MakeDefWrapper(self);
-					try {
-						_then.call(msg,
-							function $resolve$(){ resolve.apply(def_wrapper,arguments); },
-							function $reject$(){ reject.apply(def_wrapper,arguments); }
-						);
-					}
-					catch (err) {
-						reject.call(def_wrapper,err);
-					}
-				})
-			}
-			else {
-				self.msg = msg;
-				self.state = 1;
-				if (self.chain.length > 0) {
-					schedule(notify,self);
-				}
-			}
-		}
-		catch (err) {
-			reject.call(new MakeDefWrapper(self),err);
-		}
-	}
-
-	function reject(msg) {
-		var self = this;
-
-		// already triggered?
-		if (self.triggered) { return; }
-
-		self.triggered = true;
-
-		// unwrap
-		if (self.def) {
-			self = self.def;
-		}
-
-		self.msg = msg;
-		self.state = 2;
-		if (self.chain.length > 0) {
-			schedule(notify,self);
-		}
-	}
-
-	function iteratePromises(Constructor,arr,resolver,rejecter) {
-		for (var idx=0; idx<arr.length; idx++) {
-			(function IIFE(idx){
-				Constructor.resolve(arr[idx])
-				.then(
-					function $resolver$(msg){
-						resolver(idx,msg);
-					},
-					rejecter
-				);
-			})(idx);
-		}
-	}
-
-	function MakeDefWrapper(self) {
-		this.def = self;
-		this.triggered = false;
-	}
-
-	function MakeDef(self) {
-		this.promise = self;
-		this.state = 0;
-		this.triggered = false;
-		this.chain = [];
-		this.msg = void 0;
-	}
-
-	function Promise(executor) {
-		if (typeof executor != "function") {
-			throw TypeError("Not a function");
-		}
-
-		if (this.__NPO__ !== 0) {
-			throw TypeError("Not a promise");
-		}
-
-		// instance shadowing the inherited "brand"
-		// to signal an already "initialized" promise
-		this.__NPO__ = 1;
-
-		var def = new MakeDef(this);
-
-		this["then"] = function then(success,failure) {
-			var o = {
-				success: typeof success == "function" ? success : true,
-				failure: typeof failure == "function" ? failure : false
-			};
-			// Note: `then(..)` itself can be borrowed to be used against
-			// a different promise constructor for making the chained promise,
-			// by substituting a different `this` binding.
-			o.promise = new this.constructor(function extractChain(resolve,reject) {
-				if (typeof resolve != "function" || typeof reject != "function") {
-					throw TypeError("Not a function");
-				}
-
-				o.resolve = resolve;
-				o.reject = reject;
-			});
-			def.chain.push(o);
-
-			if (def.state !== 0) {
-				schedule(notify,def);
-			}
-
-			return o.promise;
-		};
-		this["catch"] = function $catch$(failure) {
-			return this.then(void 0,failure);
-		};
-
-		try {
-			executor.call(
-				void 0,
-				function publicResolve(msg){
-					resolve.call(def,msg);
-				},
-				function publicReject(msg) {
-					reject.call(def,msg);
-				}
-			);
-		}
-		catch (err) {
-			reject.call(def,err);
-		}
-	}
-
-	var PromisePrototype = builtInProp({},"constructor",Promise,
-		/*configurable=*/false
-	);
-
-	// Note: Android 4 cannot use `Object.defineProperty(..)` here
-	Promise.prototype = PromisePrototype;
-
-	// built-in "brand" to signal an "uninitialized" promise
-	builtInProp(PromisePrototype,"__NPO__",0,
-		/*configurable=*/false
-	);
-
-	builtInProp(Promise,"resolve",function Promise$resolve(msg) {
-		var Constructor = this;
-
-		// spec mandated checks
-		// note: best "isPromise" check that's practical for now
-		if (msg && typeof msg == "object" && msg.__NPO__ === 1) {
-			return msg;
-		}
-
-		return new Constructor(function executor(resolve,reject){
-			if (typeof resolve != "function" || typeof reject != "function") {
-				throw TypeError("Not a function");
-			}
-
-			resolve(msg);
-		});
-	});
-
-	builtInProp(Promise,"reject",function Promise$reject(msg) {
-		return new this(function executor(resolve,reject){
-			if (typeof resolve != "function" || typeof reject != "function") {
-				throw TypeError("Not a function");
-			}
-
-			reject(msg);
-		});
-	});
-
-	builtInProp(Promise,"all",function Promise$all(arr) {
-		var Constructor = this;
-
-		// spec mandated checks
-		if (ToString.call(arr) != "[object Array]") {
-			return Constructor.reject(TypeError("Not an array"));
-		}
-		if (arr.length === 0) {
-			return Constructor.resolve([]);
-		}
-
-		return new Constructor(function executor(resolve,reject){
-			if (typeof resolve != "function" || typeof reject != "function") {
-				throw TypeError("Not a function");
-			}
-
-			var len = arr.length, msgs = Array(len), count = 0;
-
-			iteratePromises(Constructor,arr,function resolver(idx,msg) {
-				msgs[idx] = msg;
-				if (++count === len) {
-					resolve(msgs);
-				}
-			},reject);
-		});
-	});
-
-	builtInProp(Promise,"race",function Promise$race(arr) {
-		var Constructor = this;
-
-		// spec mandated checks
-		if (ToString.call(arr) != "[object Array]") {
-			return Constructor.reject(TypeError("Not an array"));
-		}
-
-		return new Constructor(function executor(resolve,reject){
-			if (typeof resolve != "function" || typeof reject != "function") {
-				throw TypeError("Not a function");
-			}
-
-			iteratePromises(Constructor,arr,function resolver(idx,msg){
-				resolve(msg);
-			},reject);
-		});
-	});
-
-	return Promise;
-});
-
-
 /***/ })
 
 /******/ 	});
@@ -18121,8 +17740,7 @@ var components_namespaceObject = {};
 __webpack_require__.r(components_namespaceObject);
 __webpack_require__.d(components_namespaceObject, {
   "PdfSubmitButton": () => (PdfSubmitButton),
-  "PlsPlusAddress": () => (PlsPlusAddress),
-  "SSOButton": () => (SSOButton)
+  "PlsPlusAddress": () => (PlsPlusAddress)
 });
 
 // NAMESPACE OBJECT: ./src/templates/bootstrap/index.js
@@ -18145,311 +17763,6 @@ const getComponents = components => {
   });
   return customComponents;
 };
-;// CONCATENATED MODULE: ./src/components/PdfSubmitButton/editFrom/PdfSubmitButton.edit.display.js
-/*
- * use form.io Button component as boilerplate
- * https://github.com/formio/formio.js/blob/master/src/components/button/editForm/Button.edit.display.js
- *
- */
-/* harmony default export */ const PdfSubmitButton_edit_display = ([{
-  type: "content",
-  html: "<h2>This component is still in development and not a stable version.</h2><h2>Please follow <a href=\"#\" target=\"_blank\">this guide</a> to setup the form action before using this component.</h2>",
-  input: false,
-  weight: -10
-}, {
-  key: "labelPosition",
-  ignore: true
-}, {
-  key: "placeholder",
-  ignore: true
-}, {
-  key: "hideLabel",
-  ignore: true
-}, {
-  key: "action",
-  ignore: true
-}, {
-  type: "textarea",
-  key: "downloadSuccessMessage",
-  label: "Download message if PDF generated successfully",
-  tooltip: "Message show up after form submission if PDF generated successfully.",
-  rows: 5,
-  input: true,
-  weight: 120,
-  editor: "ace",
-  as: "html"
-}, {
-  type: "textarea",
-  key: "downloadFailedMessage",
-  label: "Download message if PDF didn't generate",
-  tooltip: "Message show after form submission if PDF didn't generate.",
-  rows: 5,
-  input: true,
-  weight: 120,
-  editor: "ace",
-  as: "html"
-}, {
-  type: "textfield",
-  label: "Download message class if success",
-  key: "downloadSuccessMessageClass",
-  weight: 120,
-  tooltip: "Class name of the download message container.",
-  input: true,
-  placeholder: "eg. alert alert-success"
-}, {
-  type: "textfield",
-  label: "Download message class if success",
-  key: "downloadSuccessMessageClass",
-  weight: 120,
-  tooltip: "Class name of the download message container.",
-  input: true,
-  placeholder: "eg. alert alert-success"
-}, {
-  type: "textfield",
-  label: "Download message class if didn't generate PDF",
-  key: "downloadFailedMessageClass",
-  weight: 120,
-  tooltip: "Class name of the download message container.",
-  input: true,
-  placeholder: "eg. alert alert-success"
-}, {
-  type: "textfield",
-  label: "Download button label",
-  key: "downloadButtonLabel",
-  weight: 121,
-  tooltip: "Label of the download button.",
-  input: true,
-  placeholder: "Download"
-}, {
-  type: "textfield",
-  label: "Download button class",
-  key: "downloadButtonClass",
-  weight: 122,
-  tooltip: "Class name of the download button.",
-  input: true,
-  placeholder: "btn btn-primary"
-}, {
-  type: "textfield",
-  label: "Download button target",
-  key: "downloadButtonTarget",
-  weight: 123,
-  tooltip: "Link target of the download button.",
-  input: true,
-  placeholder: "_blank"
-}, {
-  type: "checkbox",
-  input: true,
-  inputType: "checkbox",
-  key: "saveOnEnter",
-  label: "Save On Enter",
-  weight: 113,
-  tooltip: "Use the Enter key to submit form.",
-  conditional: {
-    json: {
-      "===": [{
-        var: "data.action"
-      }, "submit"]
-    }
-  }
-}, {
-  type: "select",
-  key: "theme",
-  label: "Theme",
-  input: true,
-  tooltip: "The color theme of this button.",
-  dataSrc: "values",
-  weight: 140,
-  data: {
-    values: [{
-      label: "Primary",
-      value: "primary"
-    }, {
-      label: "Secondary",
-      value: "secondary"
-    }, {
-      label: "Info",
-      value: "info"
-    }, {
-      label: "Success",
-      value: "success"
-    }, {
-      label: "Danger",
-      value: "danger"
-    }, {
-      label: "Warning",
-      value: "warning"
-    }]
-  }
-}, {
-  type: "select",
-  key: "size",
-  label: "Size",
-  input: true,
-  tooltip: "The size of this button.",
-  dataSrc: "values",
-  weight: 150,
-  data: {
-    values: [{
-      label: "Small",
-      value: "sm"
-    }, {
-      label: "Medium",
-      value: "md"
-    }, {
-      label: "Large",
-      value: "lg"
-    }]
-  }
-}, {
-  type: "textfield",
-  key: "leftIcon",
-  label: "Left Icon",
-  input: true,
-  placeholder: "Enter icon classes",
-  tooltip: "This is the full icon class string to show the icon. Example: 'fa fa-plus'",
-  weight: 160
-}, {
-  type: "textfield",
-  key: "rightIcon",
-  label: "Right Icon",
-  input: true,
-  placeholder: "Enter icon classes",
-  tooltip: "This is the full icon class string to show the icon. Example: 'fa fa-plus'",
-  weight: 170
-}, {
-  type: "checkbox",
-  key: "block",
-  label: "Block Button",
-  input: true,
-  weight: 155,
-  tooltip: "This control should span the full width of the bounding container."
-}, {
-  type: "checkbox",
-  key: "disableOnInvalid",
-  label: "Disable on Form Invalid",
-  tooltip: "This will disable this field if the form is invalid.",
-  input: true,
-  weight: 620
-}]);
-;// CONCATENATED MODULE: ./src/components/PdfSubmitButton/PdfSubmitButton.form.js
-/*
- * use form.io Button component as boilerplate
- * https://github.com/formio/formio.js/blob/master/src/components/button/Button.form.js
- *
- */
-
-const baseEditForm = Formio.Components.components.base.editForm;
-/* harmony default export */ const PdfSubmitButton_form = (function () {
-  for (var _len = arguments.length, extend = new Array(_len), _key = 0; _key < _len; _key++) {
-    extend[_key] = arguments[_key];
-  }
-
-  return baseEditForm([{
-    key: "display",
-    components: PdfSubmitButton_edit_display
-  }, {
-    key: "data",
-    ignore: true
-  }, {
-    key: "validation",
-    ignore: true
-  }, {
-    key: "addons",
-    ignore: true
-  }], ...extend);
-});
-;// CONCATENATED MODULE: ./src/components/PdfSubmitButton/PdfSubmitButton.js
-/*
- * inherit button component
- * https://github.com/formio/formio.js/blob/master/src/components/button/Button.js
- *
- */
-
-const Button = Formio.Components.components.button;
-class PdfSubmitButton extends Button {
-  static schema() {
-    for (var _len = arguments.length, extend = new Array(_len), _key = 0; _key < _len; _key++) {
-      extend[_key] = arguments[_key];
-    }
-
-    return Button.schema({
-      type: "pdfsubmitbutton",
-      label: "Submit",
-      key: "pdfsubmitbutton",
-      downloadSuccessMessage: "",
-      downloadFailedMessage: "",
-      downloadButtonLabel: undefined,
-      downloadButtonClass: undefined,
-      downloadButtonTarget: undefined,
-      downloadSuccessMessageClass: undefined,
-      downloadFailedMessageClass: undefined,
-      // props below are for debugging in storybook
-      debugMode: false,
-      debugPdfUrl: "",
-      ...extend
-    });
-  }
-
-  init() {
-    var _this$root, _this$root$options;
-
-    // hide the default submit button if it is a wizard
-    if ((_this$root = this.root) !== null && _this$root !== void 0 && (_this$root$options = _this$root.options) !== null && _this$root$options !== void 0 && _this$root$options.buttonSettings) this.root.options.buttonSettings.showSubmit = false;
-    super.init();
-  }
-
-  attachButton() {
-    super.attachButton();
-
-    if (this.component.action === "submit") {
-      this.on(this.component.debugMode ? "submit" : "submitDone", e => {
-        var _e$metadata, _e$metadata$pdfUrl;
-
-        // get the pdf DownloadUrl from submission response, the action name setup in the form needed to be `pdfUrl`
-        const pdfUrl = this.component.debugMode ? this.component.debugPdfUrl : e === null || e === void 0 ? void 0 : (_e$metadata = e.metadata) === null || _e$metadata === void 0 ? void 0 : (_e$metadata$pdfUrl = _e$metadata.pdfUrl) === null || _e$metadata$pdfUrl === void 0 ? void 0 : _e$metadata$pdfUrl.DownloadUrl;
-        const {
-          downloadSuccessMessage,
-          downloadFailedMessage,
-          downloadButtonClass,
-          downloadButtonLabel,
-          downloadButtonTarget,
-          downloadSuccessMessageClass,
-          downloadFailedMessageClass
-        } = this.component; // setup default settings for download button
-
-        const className = downloadButtonClass !== undefined ? downloadButtonClass : "btn btn-primary";
-        const target = downloadButtonTarget !== undefined ? downloadButtonTarget : "_blank";
-        const label = downloadButtonLabel !== undefined ? downloadButtonLabel : "Download";
-        const successMessageClass = downloadSuccessMessageClass || "";
-        const failedMessageClass = downloadFailedMessageClass || ""; // replace form div container with downloadSuccessMessage
-
-        if (pdfUrl) {
-          this.root.element.innerHTML = "\n              <div class=\"".concat(successMessageClass, "\">\n                ").concat(downloadSuccessMessage ? "<div class=\"mb-3 download-success-message-container\">".concat(downloadSuccessMessage, "</div>") : "", "\n                <div class=\"download-button-container\">\n                  <a href=\"").concat(pdfUrl, "\" class=\"").concat(className, "\" target=\"").concat(target, "\" />\n                    ").concat(label, "\n                  </a>\n                </div>\n              </div>\n            ");
-        } else {
-          this.root.element.innerHTML = "\n              <div class=\"".concat(failedMessageClass, "\">\n                <div class=\"download-failed-message-container\">\n                  ").concat(downloadFailedMessage, "\n                </div>\n              </div>\n            ");
-        }
-
-        this.root.element.scrollIntoView();
-      }, true);
-    }
-  }
-
-  static get builderInfo() {
-    return {
-      title: "PdfSubmitButton",
-      group: "custom",
-      icon: "fa-solid fa-file",
-      documentation: "/userguide/#button",
-      weight: 2,
-      schema: { ...PdfSubmitButton.schema()
-      }
-    };
-  }
-
-}
-PdfSubmitButton.editForm = PdfSubmitButton_form;
-;// CONCATENATED MODULE: ./src/components/PdfSubmitButton/index.js
-
 // EXTERNAL MODULE: ./node_modules/autocompleter/autocomplete.js
 var autocomplete = __webpack_require__(338);
 var autocomplete_default = /*#__PURE__*/__webpack_require__.n(autocomplete);
@@ -18541,13 +17854,13 @@ var lodash_default = /*#__PURE__*/__webpack_require__.n(lodash);
 
 
 
-const PlsPlusAddress_form_baseEditForm = Formio.Components.components.base.editForm;
+const baseEditForm = Formio.Components.components.base.editForm;
 /* harmony default export */ const PlsPlusAddress_form = (function () {
   for (var _len = arguments.length, extend = new Array(_len), _key = 0; _key < _len; _key++) {
     extend[_key] = arguments[_key];
   }
 
-  return PlsPlusAddress_form_baseEditForm([{
+  return baseEditForm([{
     key: "data",
     components: PlsPlusAddress_edit_data
   }, {
@@ -19198,157 +18511,316 @@ class PlsPlusAddress extends FieldsetComponent {
 PlsPlusAddress.editForm = PlsPlusAddress_form;
 ;// CONCATENATED MODULE: ./src/components/PlsPlusAddress/index.js
 
-// EXTERNAL MODULE: ./node_modules/native-promise-only/lib/npo.src.js
-var npo_src = __webpack_require__(459);
-var npo_src_default = /*#__PURE__*/__webpack_require__.n(npo_src);
-;// CONCATENATED MODULE: ./src/components/SSOButton/SSOButton.js
+;// CONCATENATED MODULE: ./src/components/PdfSubmitButton/editFrom/PdfSubmitButton.edit.display.js
 /*
- * This component is used for SSO solution.
- * Inherit the Button component and only customise the openOauth function, in order to support QG SSO solution.
- * This component is extending from:
+ * use form.io Button component as boilerplate
+ * https://github.com/formio/formio.js/blob/master/src/components/button/editForm/Button.edit.display.js
+ *
+ */
+/* harmony default export */ const PdfSubmitButton_edit_display = ([{
+  type: "content",
+  html: "<h2>This component is still in development and not a stable version.</h2><h2>Please follow <a href=\"#\" target=\"_blank\">this guide</a> to setup the form action before using this component.</h2>",
+  input: false,
+  weight: -10
+}, {
+  key: "labelPosition",
+  ignore: true
+}, {
+  key: "placeholder",
+  ignore: true
+}, {
+  key: "hideLabel",
+  ignore: true
+}, {
+  key: "action",
+  ignore: true
+}, {
+  type: "textarea",
+  key: "downloadSuccessMessage",
+  label: "Download message if PDF generated successfully",
+  tooltip: "Message show up after form submission if PDF generated successfully.",
+  rows: 5,
+  input: true,
+  weight: 120,
+  editor: "ace",
+  as: "html"
+}, {
+  type: "textarea",
+  key: "downloadFailedMessage",
+  label: "Download message if PDF didn't generate",
+  tooltip: "Message show after form submission if PDF didn't generate.",
+  rows: 5,
+  input: true,
+  weight: 120,
+  editor: "ace",
+  as: "html"
+}, {
+  type: "textfield",
+  label: "Download message class if success",
+  key: "downloadSuccessMessageClass",
+  weight: 120,
+  tooltip: "Class name of the download message container.",
+  input: true,
+  placeholder: "eg. alert alert-success"
+}, {
+  type: "textfield",
+  label: "Download message class if success",
+  key: "downloadSuccessMessageClass",
+  weight: 120,
+  tooltip: "Class name of the download message container.",
+  input: true,
+  placeholder: "eg. alert alert-success"
+}, {
+  type: "textfield",
+  label: "Download message class if didn't generate PDF",
+  key: "downloadFailedMessageClass",
+  weight: 120,
+  tooltip: "Class name of the download message container.",
+  input: true,
+  placeholder: "eg. alert alert-success"
+}, {
+  type: "textfield",
+  label: "Download button label",
+  key: "downloadButtonLabel",
+  weight: 121,
+  tooltip: "Label of the download button.",
+  input: true,
+  placeholder: "Download"
+}, {
+  type: "textfield",
+  label: "Download button class",
+  key: "downloadButtonClass",
+  weight: 122,
+  tooltip: "Class name of the download button.",
+  input: true,
+  placeholder: "btn btn-primary"
+}, {
+  type: "textfield",
+  label: "Download button target",
+  key: "downloadButtonTarget",
+  weight: 123,
+  tooltip: "Link target of the download button.",
+  input: true,
+  placeholder: "_blank"
+}, {
+  type: "checkbox",
+  input: true,
+  inputType: "checkbox",
+  key: "saveOnEnter",
+  label: "Save On Enter",
+  weight: 113,
+  tooltip: "Use the Enter key to submit form.",
+  conditional: {
+    json: {
+      "===": [{
+        var: "data.action"
+      }, "submit"]
+    }
+  }
+}, {
+  type: "select",
+  key: "theme",
+  label: "Theme",
+  input: true,
+  tooltip: "The color theme of this button.",
+  dataSrc: "values",
+  weight: 140,
+  data: {
+    values: [{
+      label: "Primary",
+      value: "primary"
+    }, {
+      label: "Secondary",
+      value: "secondary"
+    }, {
+      label: "Info",
+      value: "info"
+    }, {
+      label: "Success",
+      value: "success"
+    }, {
+      label: "Danger",
+      value: "danger"
+    }, {
+      label: "Warning",
+      value: "warning"
+    }]
+  }
+}, {
+  type: "select",
+  key: "size",
+  label: "Size",
+  input: true,
+  tooltip: "The size of this button.",
+  dataSrc: "values",
+  weight: 150,
+  data: {
+    values: [{
+      label: "Small",
+      value: "sm"
+    }, {
+      label: "Medium",
+      value: "md"
+    }, {
+      label: "Large",
+      value: "lg"
+    }]
+  }
+}, {
+  type: "textfield",
+  key: "leftIcon",
+  label: "Left Icon",
+  input: true,
+  placeholder: "Enter icon classes",
+  tooltip: "This is the full icon class string to show the icon. Example: 'fa fa-plus'",
+  weight: 160
+}, {
+  type: "textfield",
+  key: "rightIcon",
+  label: "Right Icon",
+  input: true,
+  placeholder: "Enter icon classes",
+  tooltip: "This is the full icon class string to show the icon. Example: 'fa fa-plus'",
+  weight: 170
+}, {
+  type: "checkbox",
+  key: "block",
+  label: "Block Button",
+  input: true,
+  weight: 155,
+  tooltip: "This control should span the full width of the bounding container."
+}, {
+  type: "checkbox",
+  key: "disableOnInvalid",
+  label: "Disable on Form Invalid",
+  tooltip: "This will disable this field if the form is invalid.",
+  input: true,
+  weight: 620
+}]);
+;// CONCATENATED MODULE: ./src/components/PdfSubmitButton/PdfSubmitButton.form.js
+/*
+ * use form.io Button component as boilerplate
+ * https://github.com/formio/formio.js/blob/master/src/components/button/Button.form.js
+ *
+ */
+
+const PdfSubmitButton_form_baseEditForm = Formio.Components.components.base.editForm;
+/* harmony default export */ const PdfSubmitButton_form = (function () {
+  for (var _len = arguments.length, extend = new Array(_len), _key = 0; _key < _len; _key++) {
+    extend[_key] = arguments[_key];
+  }
+
+  return PdfSubmitButton_form_baseEditForm([{
+    key: "display",
+    components: PdfSubmitButton_edit_display
+  }, {
+    key: "data",
+    ignore: true
+  }, {
+    key: "validation",
+    ignore: true
+  }, {
+    key: "addons",
+    ignore: true
+  }], ...extend);
+});
+;// CONCATENATED MODULE: ./src/components/PdfSubmitButton/PdfSubmitButton.js
+/*
+ * inherit button component
  * https://github.com/formio/formio.js/blob/master/src/components/button/Button.js
  *
  */
 
-
-const SSOButton_Button = Formio.Components.components.button;
-class SSOButton extends SSOButton_Button {
+const Button = Formio.Components.components.button;
+class PdfSubmitButton extends Button {
   static schema() {
     for (var _len = arguments.length, extend = new Array(_len), _key = 0; _key < _len; _key++) {
       extend[_key] = arguments[_key];
     }
 
-    return SSOButton_Button.schema({
-      type: "ssobutton",
-      label: "SSO button",
-      key: "ssobutton",
+    return Button.schema({
+      type: "pdfsubmitbutton",
+      label: "Submit",
+      key: "pdfsubmitbutton",
+      downloadSuccessMessage: "",
+      downloadFailedMessage: "",
+      downloadButtonLabel: undefined,
+      downloadButtonClass: undefined,
+      downloadButtonTarget: undefined,
+      downloadSuccessMessageClass: undefined,
+      downloadFailedMessageClass: undefined,
+      // props below are for debugging in storybook
+      debugMode: false,
+      debugPdfUrl: "",
       ...extend
     });
   }
 
-  openOauth(settings) {
-    if (!this.root.formio) {
-      console.warn("You must attach a Form API url to your form in order to use OAuth buttons.");
-      return;
-    }
-    /* eslint-disable camelcase */
+  init() {
+    var _this$root, _this$root$options;
 
+    // hide the default submit button if it is a wizard
+    if ((_this$root = this.root) !== null && _this$root !== void 0 && (_this$root$options = _this$root.options) !== null && _this$root$options !== void 0 && _this$root$options.buttonSettings) this.root.options.buttonSettings.showSubmit = false;
+    super.init();
+  }
 
-    let params = {
-      response_type: "code",
-      client_id: settings.clientId,
-      redirect_uri: settings.redirectURI || window.location.origin || "".concat(window.location.protocol, "//").concat(window.location.host),
-      state: settings.state,
-      scope: settings.scope
-    };
-    /* eslint-enable camelcase */
-    // Needs for the correct redirection URI for the OpenID
+  attachButton() {
+    super.attachButton();
 
-    const originalRedirectUri = params.redirect_uri; // Make display optional.
+    if (this.component.action === "submit") {
+      this.on(this.component.debugMode ? "submit" : "submitDone", e => {
+        var _e$metadata, _e$metadata$pdfUrl;
 
-    if (settings.display) {
-      params.display = settings.display;
-    }
+        // get the pdf DownloadUrl from submission response, the action name setup in the form needed to be `pdfUrl`
+        const pdfUrl = this.component.debugMode ? this.component.debugPdfUrl : e === null || e === void 0 ? void 0 : (_e$metadata = e.metadata) === null || _e$metadata === void 0 ? void 0 : (_e$metadata$pdfUrl = _e$metadata.pdfUrl) === null || _e$metadata$pdfUrl === void 0 ? void 0 : _e$metadata$pdfUrl.DownloadUrl;
+        const {
+          downloadSuccessMessage,
+          downloadFailedMessage,
+          downloadButtonClass,
+          downloadButtonLabel,
+          downloadButtonTarget,
+          downloadSuccessMessageClass,
+          downloadFailedMessageClass
+        } = this.component; // setup default settings for download button
 
-    params = Object.keys(params).map(key => {
-      return "".concat(key, "=").concat(encodeURIComponent(params[key]));
-    }).join("&");
-    const separator = settings.authURI.indexOf("?") !== -1 ? "&" : "?";
-    const url = "".concat(settings.authURI).concat(separator).concat(params);
-    const popup = window.open(url, settings.provider, "width=1020,height=618");
-    const interval = setInterval(() => {
-      try {
-        // This is the condition need to be customised
-        // const popupHost = popup.location.host;
-        // const currentHost = window.location.host;
-        // if (
-        //   popup &&
-        //   !popup.closed &&
-        //   popupHost === currentHost &&
-        //   popup.location.search
-        // ) {
-        if (popup && !popup.closed && popup.location.search) {
-          popup.close();
-          const thisParams = popup.location.search.substr(1).split("&").reduce((innerParams, param) => {
-            const split = param.split("="); // eslint-disable-next-line prefer-destructuring
+        const className = downloadButtonClass !== undefined ? downloadButtonClass : "btn btn-primary";
+        const target = downloadButtonTarget !== undefined ? downloadButtonTarget : "_blank";
+        const label = downloadButtonLabel !== undefined ? downloadButtonLabel : "Download";
+        const successMessageClass = downloadSuccessMessageClass || "";
+        const failedMessageClass = downloadFailedMessageClass || ""; // replace form div container with downloadSuccessMessage
 
-            innerParams[split[0]] = split[1];
-            return innerParams;
-          }, {});
-
-          if (thisParams.error) {
-            // eslint-disable-next-line no-alert
-            window.alert(thisParams.error_description || thisParams.error);
-            this.root.setAlert("danger", thisParams.error_description || thisParams.error);
-            return;
-          } // TODO: check for error response here
-
-
-          if (settings.state !== thisParams.state) {
-            this.root.setAlert("danger", "OAuth state does not match. Please try logging in again.");
-            return;
-          } // Depending on where the settings came from, submit to either the submission endpoint (old) or oauth endpoint (new).
-
-
-          let requestPromise = npo_src_default().resolve();
-
-          if (lodash_default().has(this, "root.form.config.oauth") && this.root.form.config.oauth[this.component.oauthProvider]) {
-            thisParams.provider = settings.provider;
-            thisParams.redirectURI = originalRedirectUri; // Needs for the exclude oAuth Actions that not related to this button
-
-            thisParams.triggeredBy = this.key;
-            requestPromise = this.root.formio.makeRequest("oauth", "".concat(this.root.formio.projectUrl, "/oauth2"), "POST", thisParams);
-          } else {
-            const submission = {
-              data: {},
-              oauth: {}
-            };
-            submission.oauth[settings.provider] = thisParams;
-            submission.oauth[settings.provider].redirectURI = originalRedirectUri; // Needs for the exclude oAuth Actions that not related to this button
-
-            submission.oauth[settings.provider].triggeredBy = this.key;
-            requestPromise = this.root.formio.saveSubmission(submission);
-          }
-
-          requestPromise.then(result => {
-            this.root.onSubmit(result, true);
-          }).catch(err => {
-            this.root.onSubmissionError(err);
-          });
+        if (pdfUrl) {
+          this.root.element.innerHTML = "\n              <div class=\"".concat(successMessageClass, "\">\n                ").concat(downloadSuccessMessage ? "<div class=\"mb-3 download-success-message-container\">".concat(downloadSuccessMessage, "</div>") : "", "\n                <div class=\"download-button-container\">\n                  <a href=\"").concat(pdfUrl, "\" class=\"").concat(className, "\" target=\"").concat(target, "\" />\n                    ").concat(label, "\n                  </a>\n                </div>\n              </div>\n            ");
+        } else {
+          this.root.element.innerHTML = "\n              <div class=\"".concat(failedMessageClass, "\">\n                <div class=\"download-failed-message-container\">\n                  ").concat(downloadFailedMessage, "\n                </div>\n              </div>\n            ");
         }
-      } catch (error) {
-        if (error.name !== "SecurityError" && (error.name !== "Error" || error.message !== "Permission denied")) {
-          this.root.setAlert("danger", error.message || error);
-        }
-      }
 
-      if (!popup || popup.closed || popup.closed === undefined) {
-        clearInterval(interval);
-      }
-    }, 100);
-  } // customise builder settings
-
+        this.root.element.scrollIntoView();
+      }, true);
+    }
+  }
 
   static get builderInfo() {
     return {
-      title: "SSOButton",
+      title: "PdfSubmitButton",
       group: "custom",
+      icon: "fa-solid fa-file",
       documentation: "/userguide/#button",
       weight: 2,
-      schema: { ...SSOButton.schema()
+      schema: { ...PdfSubmitButton.schema()
       }
     };
   }
 
 }
-;// CONCATENATED MODULE: ./src/components/SSOButton/index.js
+PdfSubmitButton.editForm = PdfSubmitButton_form;
+;// CONCATENATED MODULE: ./src/components/PdfSubmitButton/index.js
 
 ;// CONCATENATED MODULE: ./src/components/index.js
 /*
  * this file is used for prod environment for bundling
  *
  */
-
 
 
 ;// CONCATENATED MODULE: ./src/templates/bootstrap/boilerplateButton/form.ejs

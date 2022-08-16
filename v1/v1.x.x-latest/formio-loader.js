@@ -117,7 +117,14 @@ __webpack_require__.d(__webpack_exports__, {
 // EXTERNAL MODULE: ./src/config/createForm.options.js
 var createForm_options = __webpack_require__(203);
 var createForm_options_default = /*#__PURE__*/__webpack_require__.n(createForm_options);
+;// CONCATENATED MODULE: ./src/utils/pushDataLayer.js
+const pushDataLayer = data => {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push(data);
+};
 ;// CONCATENATED MODULE: ./src/config/createForm.controller.js
+/* eslint-disable no-underscore-dangle */
+
 /* harmony default export */ const createForm_controller = (_ref => {
   let {
     form,
@@ -125,23 +132,17 @@ var createForm_options_default = /*#__PURE__*/__webpack_require__.n(createForm_o
   } = _ref;
   // Change event/GTM
   form.on("change", e => {
-    // eslint-disable-next-line no-underscore-dangle
-    const formTitle = form._form.title; // eslint-disable-next-line no-underscore-dangle
-
-    const formModified = form._form.modified;
-
     if (typeof e.changed !== "undefined" && typeof e.changed.component !== "undefined") {
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
+      pushDataLayer({
         event: "formio-interaction",
-        "formio-name": formTitle,
         "formio-input-id": e.changed.component.id,
         "formio-input-type": e.changed.component.type,
         "formio-input-value": e.changed.value,
         "formio-input-key": e.changed.component.key,
         "formio-input-label-raw": e.changed.component.label,
-        "formio-version": formModified,
-        "formio-category": "Form: ".concat(formTitle),
+        "formio-name": form._form.title,
+        "formio-version": form._form.modified,
+        "formio-category": "Form: ".concat(form._form.title),
         "formio-action": "filled in"
       });
     }
@@ -149,9 +150,26 @@ var createForm_options_default = /*#__PURE__*/__webpack_require__.n(createForm_o
 
   form.on("applicationSubmit", () => {
     form.submit();
-  });
+  }); // in a form submission, it will either fire `submitDone` or `submitError`, after getting the response from the formio api.
+
   form.on("submitDone", () => {
-    if (formConfirmation) window.location.href = formConfirmation;
+    pushDataLayer({
+      event: "formio-submission",
+      submissionsUrl: "form.io: ".concat(form.formio.submissionsUrl),
+      "formio-name": form._form.title,
+      "formio-version": form._form.modified
+    });
+    if (formConfirmation) setTimeout(() => {
+      window.location.href = formConfirmation;
+    }, 500);
+  });
+  form.on("submitError", error => {
+    pushDataLayer({
+      event: "ngErrorEvent",
+      ngErrorLocation: form._form.title,
+      ngErrorMsg: (error === null || error === void 0 ? void 0 : error.message) || error,
+      ngErrorStack: ""
+    });
   });
 });
 ;// CONCATENATED MODULE: ./src/utils/delegateSelector.js
