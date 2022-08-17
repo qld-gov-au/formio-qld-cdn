@@ -155,7 +155,7 @@ const pushDataLayer = data => {
   form.on("submitDone", () => {
     pushDataLayer({
       event: "formio-submission",
-      submissionsUrl: "form.io: ".concat(form.formio.submissionsUrl),
+      "formio-submissionsUrl": "form.io: ".concat(form.formio.submissionsUrl),
       "formio-name": form._form.title,
       "formio-version": form._form.modified
     });
@@ -167,7 +167,7 @@ const pushDataLayer = data => {
     const msg = Array.isArray(error) ? error.map(o => o.message).join(", ") : (error === null || error === void 0 ? void 0 : error.message) || error;
     pushDataLayer({
       event: "ngErrorEvent",
-      ngErrorLocation: form._form.title,
+      ngErrorLocation: "form.io - ".concat(form._form.title),
       ngErrorMsg: msg,
       ngErrorStack: ""
     });
