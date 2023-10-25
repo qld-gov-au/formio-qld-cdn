@@ -139,7 +139,7 @@ const initScript = scripts => new Promise(resolve => {
 
 ;// CONCATENATED MODULE: ./src/helpers/FormioScript/index.gitbridge.js
 
-const version = window.formioQldCdnVersion || "248740";
+const version = window.formIOGitBridgeID || "248740";
 const scripts = [{
   type: "script",
   src: "/__data/assets/git_bridge/0025/".concat(version, "/formio.full.js"),
