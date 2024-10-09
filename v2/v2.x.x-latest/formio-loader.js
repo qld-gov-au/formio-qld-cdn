@@ -117,12 +117,12 @@ __webpack_require__.d(__webpack_exports__, {
 // EXTERNAL MODULE: ./src/config/createForm.options.js
 var createForm_options = __webpack_require__(784);
 var createForm_options_default = /*#__PURE__*/__webpack_require__.n(createForm_options);
-;// CONCATENATED MODULE: ./src/utils/pushDataLayer.js
+;// ./src/utils/pushDataLayer.js
 const pushDataLayer = data => {
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push(data);
 };
-;// CONCATENATED MODULE: ./src/config/createForm.controller.js
+;// ./src/config/createForm.controller.js
 /* eslint-disable no-underscore-dangle */
 
 /* harmony default export */ const createForm_controller = (_ref => {
@@ -175,7 +175,7 @@ const pushDataLayer = data => {
     });
   });
 });
-;// CONCATENATED MODULE: ./src/utils/delegateSelector.js
+;// ./src/utils/delegateSelector.js
 const delegateSelector = (elements, event, childSelector, handler) => {
   const is = (el, s) => {
     return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector).call(el, s);
@@ -193,7 +193,7 @@ const delegateSelector = (elements, event, childSelector, handler) => {
     addEvent(elements);
   }
 };
-;// CONCATENATED MODULE: ./src/helpers/FormioLoader/FormioLoader.js
+;// ./src/helpers/FormioLoader/FormioLoader.js
 
 
 
@@ -382,7 +382,7 @@ const initFormio = function () {
   });
 };
 
-;// CONCATENATED MODULE: ./src/helpers/FormioLoader/index.js
+;// ./src/helpers/FormioLoader/index.js
 
 })();
 

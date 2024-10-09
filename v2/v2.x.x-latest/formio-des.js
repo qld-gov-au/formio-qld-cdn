@@ -17332,8 +17332,6 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
 
 // NAMESPACE OBJECT: ./src/components/index.des.js
 var index_des_namespaceObject = {};
@@ -17357,7 +17355,7 @@ __webpack_require__.d(bootstrap_namespaceObject, {
 // EXTERNAL MODULE: ./src/config/build.options.js
 var build_options = __webpack_require__(764);
 var build_options_default = /*#__PURE__*/__webpack_require__.n(build_options);
-;// CONCATENATED MODULE: ./src/utils/getComponents.js
+;// ./src/utils/getComponents.js
 const getComponents = components => {
   const customComponents = {};
   Object.keys(components).forEach(key => {
@@ -17366,12 +17364,12 @@ const getComponents = components => {
   });
   return customComponents;
 };
-;// CONCATENATED MODULE: ./node_modules/autocompleter/autocomplete.es.js
+;// ./node_modules/autocompleter/autocomplete.es.js
 /**
- * Copyright (c) 2016 Denys Krasnoshchok
+ * Copyright (c) 2016 Denis Taran
  *
  * Homepage: https://smartscheduling.com/en/documentation/autocomplete
- * Source: https://github.com/kraaden/autocomplete
+ * Source: https://github.com/denis-taran/autocomplete
  *
  * MIT License
  */
@@ -17402,7 +17400,7 @@ function autocomplete(settings) {
         throw new Error('input undefined');
     }
     var input = settings.input;
-    container.className = 'autocomplete ' + (settings.className || '');
+    container.className = [container.className, 'autocomplete', settings.className || ''].join(' ').trim();
     container.setAttribute('role', 'listbox');
     input.setAttribute('role', 'combobox');
     input.setAttribute('aria-expanded', 'false');
@@ -17828,7 +17826,7 @@ function autocomplete(settings) {
 // EXTERNAL MODULE: ./node_modules/lodash/lodash.js
 var lodash = __webpack_require__(543);
 var lodash_default = /*#__PURE__*/__webpack_require__.n(lodash);
-;// CONCATENATED MODULE: ./src/components/PlsPlusAddress/editForm/PlsPlusAddress.edit.data.js
+;// ./src/components/PlsPlusAddress/editForm/PlsPlusAddress.edit.data.js
 /* harmony default export */ const PlsPlusAddress_edit_data = ([{
   key: "multiple",
   customConditional: () => false
@@ -17836,7 +17834,7 @@ var lodash_default = /*#__PURE__*/__webpack_require__.n(lodash);
   key: "defaultValue",
   customConditional: () => false
 }]);
-;// CONCATENATED MODULE: ./src/components/PlsPlusAddress/editForm/PlsPlusAddress.edit.display.js
+;// ./src/components/PlsPlusAddress/editForm/PlsPlusAddress.edit.display.js
 /*
  * use form.io Address component as boilerplate
  * https://github.com/formio/formio.js/blob/master/src/components/address/editForm/Address.edit.display.js
@@ -17882,7 +17880,7 @@ var lodash_default = /*#__PURE__*/__webpack_require__.n(lodash);
     return data.multiple;
   }
 }]);
-;// CONCATENATED MODULE: ./src/components/PlsPlusAddress/editForm/PlsPlusAddress.edit.provider.js
+;// ./src/components/PlsPlusAddress/editForm/PlsPlusAddress.edit.provider.js
 /* harmony default export */ const PlsPlusAddress_edit_provider = ([{
   type: "textfield",
   input: true,
@@ -17905,7 +17903,7 @@ var lodash_default = /*#__PURE__*/__webpack_require__.n(lodash);
   tooltip: "Leave blank for using the default URL.",
   description: "The default PlsPlus API base URL is `https://www.address.services.qld.gov.au`, you can override that by providing a different base URL."
 }]);
-;// CONCATENATED MODULE: ./src/components/PlsPlusAddress/PlsPlusAddress.form.js
+;// ./src/components/PlsPlusAddress/PlsPlusAddress.form.js
 /*
  * use form.io Address component as boilerplate
  * https://github.com/formio/formio.js/blob/master/src/components/address/Address.form.js
@@ -17933,7 +17931,7 @@ const baseEditForm = Formio.Components.components.base.editForm;
     components: PlsPlusAddress_edit_provider
   }], ...extend);
 });
-;// CONCATENATED MODULE: ./src/components/PlsPlusAddress/PlsPlusAddress.js
+;// ./src/components/PlsPlusAddress/PlsPlusAddress.js
 /*
  * use form.io Address component as boilerplate
  * https://github.com/formio/formio.js/blob/master/src/components/address/Address.js
@@ -18481,9 +18479,9 @@ class PlsPlusAddress extends FieldsetComponent {
   }
 }
 PlsPlusAddress.editForm = PlsPlusAddress_form;
-;// CONCATENATED MODULE: ./src/components/PlsPlusAddress/index.js
+;// ./src/components/PlsPlusAddress/index.js
 
-;// CONCATENATED MODULE: ./src/components/googleLocation/editForm/Location.edit.map.js
+;// ./src/components/googleLocation/editForm/Location.edit.map.js
 /* harmony default export */ const Location_edit_map = ([{
   type: "textfield",
   input: true,
@@ -18508,7 +18506,7 @@ PlsPlusAddress.editForm = PlsPlusAddress_form;
   tooltip: "This is the Google Maps ID you wish to use when showing the location map.",
   weight: 20
 }]);
-;// CONCATENATED MODULE: ./src/components/googleLocation/GoogleLocation.form.js
+;// ./src/components/googleLocation/GoogleLocation.form.js
 
 const GoogleLocation_form_baseEditForm = Formio.Components.components.base.editForm;
 function googleLocationFormWrapper() {
@@ -18522,7 +18520,7 @@ function googleLocationFormWrapper() {
     components: Location_edit_map
   }], ...extend);
 }
-;// CONCATENATED MODULE: ./src/components/googleLocation/GoogleLocation.js
+;// ./src/components/googleLocation/GoogleLocation.js
 /* global google */
 
 
@@ -18632,7 +18630,7 @@ class GoogleLocation extends TextFieldComponent {
           element.map.setCenter(place.geometry.location);
           element.map.setZoom(17); // Why 17? Because it looks good.
         }
-        element.marker.setIcon( /** @type {google.maps.Icon} */{
+        element.marker.setIcon(/** @type {google.maps.Icon} */{
           url: place.icon,
           size: new google.maps.Size(71, 71),
           origin: new google.maps.Point(0, 0),
@@ -18679,9 +18677,9 @@ GoogleLocation.editForm = googleLocationFormWrapper;
 // Register the component to the Formio.Components registry.
 // This is not required as we dynamicly load them based on lower
 // Formio.Components.addComponent("location", GoogleLocation);
-;// CONCATENATED MODULE: ./src/components/googleLocation/index.js
+;// ./src/components/googleLocation/index.js
 
-;// CONCATENATED MODULE: ./src/components/openStreetMapLocation/editForm/OpenStreetMapLocation.edit.map.js
+;// ./src/components/openStreetMapLocation/editForm/OpenStreetMapLocation.edit.map.js
 /* harmony default export */ const OpenStreetMapLocation_edit_map = ([{
   type: "textfield",
   input: true,
@@ -18706,7 +18704,7 @@ GoogleLocation.editForm = googleLocationFormWrapper;
   tooltip: "This is the  Maps ID you wish to use when showing the location map.",
   weight: 20
 }]);
-;// CONCATENATED MODULE: ./src/components/openStreetMapLocation/OpenStreetMapLocation.form.js
+;// ./src/components/openStreetMapLocation/OpenStreetMapLocation.form.js
 
 const OpenStreetMapLocation_form_baseEditForm = Formio.Components.components.base.editForm;
 function openStreetMapFormWrapper() {
@@ -18720,7 +18718,7 @@ function openStreetMapFormWrapper() {
     components: OpenStreetMapLocation_edit_map
   }], ...extend);
 }
-;// CONCATENATED MODULE: ./src/components/openStreetMapLocation/OpenStreetMapLocation.js
+;// ./src/components/openStreetMapLocation/OpenStreetMapLocation.js
 /* global L */
 
 
@@ -18909,9 +18907,9 @@ OpenStreetMapLocation.editForm = openStreetMapFormWrapper;
 // Register the component to the Formio.Components registry.
 // This is not required as we dynamicly load them based on lower
 // Formio.Components.addComponent("location", GoogleLocation);
-;// CONCATENATED MODULE: ./src/components/openStreetMapLocation/index.js
+;// ./src/components/openStreetMapLocation/index.js
 
-;// CONCATENATED MODULE: ./src/components/index.des.js
+;// ./src/components/index.des.js
 /*
  * this file is used for dev environment for storybook and testing
  *
@@ -18923,11 +18921,11 @@ OpenStreetMapLocation.editForm = openStreetMapFormWrapper;
 // export * from "./SSOButton";
 
 
-;// CONCATENATED MODULE: ./src/templates/bootstrap/boilerplateButton/form.ejs
+;// ./src/templates/bootstrap/boilerplateButton/form.ejs
 /* harmony default export */ const boilerplateButton_form = ("<!--\n  boilerplate from https://github.com/formio/formio.js/blob/master/src/templates/bootstrap/button/form.ejs\n-->\n<div class=\"mb-2\">\n  {{ctx.component.customDescription}}\n</div>\n<{{ctx.input.type}}\n  ref=\"button\"\n  {% for (var attr in ctx.input.attr) { %}\n  {{attr}}=\"{{ctx.input.attr[attr]}}\"\n  {% } %}\n  {% if (ctx.component.description) { %}\n    aria-describedby=\"d-{{ctx.instance.id}}-{{ctx.component.key}}\"\n  {% } %}\n>\n{% if (ctx.component.leftIcon) { %}<span class=\"{{ctx.component.leftIcon}}\"></span>&nbsp;{% } %}\n{{ctx.input.content}}\n{% if (ctx.component.tooltip) { %}\n  <i ref=\"tooltip\" class=\"{{ctx.iconClass('question-sign')}} text-muted\" data-tooltip=\"{{ctx.component.tooltip}}\"></i>\n{% } %}\n{% if (ctx.component.rightIcon) { %}&nbsp;<span class=\"{{ctx.component.rightIcon}}\"></span>{% } %}\n</{{ctx.input.type}}>\n<div ref=\"buttonMessageContainer\">\n  <span class=\"help-block\" ref=\"buttonMessage\"></span>\n</div>\n");
-;// CONCATENATED MODULE: ./src/templates/bootstrap/boilerplateButton/html.ejs
+;// ./src/templates/bootstrap/boilerplateButton/html.ejs
 /* harmony default export */ const html = ("<!--\n  boilerplate from https://github.com/formio/formio.js/blob/master/src/templates/bootstrap/button/html.ejs\n-->");
-;// CONCATENATED MODULE: ./src/templates/bootstrap/boilerplateButton/index.js
+;// ./src/templates/bootstrap/boilerplateButton/index.js
 /*
  * use form.io button template as BoilerplateButton
  * https://github.com/formio/formio.js/blob/master/src/templates/bootstrap/button/index.js
@@ -18940,11 +18938,11 @@ const boilerplateButton = {
   form: boilerplateButton_form,
   html: html
 };
-;// CONCATENATED MODULE: ./src/templates/bootstrap/plsPlusAddress/form.ejs
+;// ./src/templates/bootstrap/plsPlusAddress/form.ejs
 /* harmony default export */ const plsPlusAddress_form = ("<div class=\"address-autocomplete-container\">\n  <input\n    ref=\"{{ ctx.ref.searchInput }}\"\n    {% for (var attr in ctx.inputAttributes) { %}\n      {{attr}}=\"{{ctx.inputAttributes[attr]}}\"\n    {% } %}\n    value=\"{{ ctx.displayValue }}\"\n    autocomplete=\"off\"\n    aria-label=\"{{ctx.t('autocomplete')}}\"\n  >\n  {% if (!ctx.component.disableClearIcon) { %}\n    <i\n      class=\"address-autocomplete-remove-value-icon fa fa-times\"\n      tabindex=\"{{ ctx.inputAttributes.tabindex }}\"\n      ref=\"{{ ctx.ref.removeValueIcon }}\"\n    ></i>\n  {% } %}\n</div>\n{% if (!ctx.hasApiKey) { %}\n    <div class=\"form-text\">Please provide an API key in Provider to use the search function.</div>\n{% } %}\n{% if (ctx.self.manualModeEnabled) { %}\n  <div class=\"form-check checkbox\">\n    <label class=\"form-check-label\">\n      <input\n        ref=\"{{ ctx.ref.modeSwitcher }}\"\n        type=\"checkbox\"\n        class=\"form-check-input\"\n        tabindex=\"{{ ctx.inputAttributes.tabindex }}\"\n        {% if (ctx.mode.manual) { %}checked=true{% } %}\n        {% if (ctx.disabled) { %}disabled=true{% } %}\n      >\n      <span>{{ ctx.component.switchToManualModeLabel }}</span>\n    </label>\n  </div>\n{% } %}\n{% if (ctx.self.manualModeEnabled && ( ctx.mode.manual || ctx.displayValue)) { %}\n  <div ref=\"{{ ctx.nestedKey }}\" class=\"address-nested\">\n    {{ ctx.children }}\n  </div>\n{% } %}\n{% if (ctx.mode.manual) { %}\n<div>\n  <!-- Todo Link/function to improve the address database -->\n  <!-- <p><a href=\"#\" target=\"_blank\">Please take part to improve our address database if we couldn't find your address.</a></p> -->\n</div>\n{% } %}");
-;// CONCATENATED MODULE: ./src/templates/bootstrap/plsPlusAddress/html.ejs
+;// ./src/templates/bootstrap/plsPlusAddress/html.ejs
 /* harmony default export */ const plsPlusAddress_html = ("<div ref=\"value\">{% if (ctx.displayValue) { %}{{ctx.displayValue}}{% } else { %}-{% } %}</div>");
-;// CONCATENATED MODULE: ./src/templates/bootstrap/plsPlusAddress/index.js
+;// ./src/templates/bootstrap/plsPlusAddress/index.js
 /*
  * use form.io Address template as boilerplate
  * https://github.com/formio/formio.js/blob/master/src/templates/bootstrap/address/index.js
@@ -18957,33 +18955,33 @@ const plsPlusAddress = {
   form: plsPlusAddress_form,
   html: plsPlusAddress_html
 };
-;// CONCATENATED MODULE: ./src/templates/bootstrap/googleMap/form.ejs
+;// ./src/templates/bootstrap/googleMap/form.ejs
 /* harmony default export */ const googleMap_form = ("<div id=\"{{ctx.mapId}}\" style=\"min-height: 300px; height: calc(100vh - 600px);\" ref=\"gmapElement\"></div>");
-;// CONCATENATED MODULE: ./src/templates/bootstrap/googleMap/index.js
+;// ./src/templates/bootstrap/googleMap/index.js
 
 const googleMap = {
   form: googleMap_form
 };
-;// CONCATENATED MODULE: ./src/templates/bootstrap/leafletMap/form.ejs
+;// ./src/templates/bootstrap/leafletMap/form.ejs
 /* harmony default export */ const leafletMap_form = ("<div id=\"{{ctx.mapId}}\" style=\"min-height: 300px; height: calc(100vh - 600px);\" ref=\"leafletElement\"></div>");
-;// CONCATENATED MODULE: ./src/templates/bootstrap/leafletMap/index.js
+;// ./src/templates/bootstrap/leafletMap/index.js
 
 const leafletMap = {
   form: leafletMap_form
 };
-;// CONCATENATED MODULE: ./src/templates/bootstrap/index.js
+;// ./src/templates/bootstrap/index.js
 
 
 // export * from "./plsPlusAddressWithMap";
 
 
-;// CONCATENATED MODULE: ./src/templates/index.js
+;// ./src/templates/index.js
 
 /* harmony default export */ const templates = ({
   bootstrap: bootstrap_namespaceObject,
   bootstrap3: bootstrap_namespaceObject
 });
-;// CONCATENATED MODULE: ./src/providers/address/PlsPlusAddressProvider.js
+;// ./src/providers/address/PlsPlusAddressProvider.js
 
 const CustomAddressProvider = Formio.Providers.providers.address.custom;
 const defaultApiBase = "https://www.address.services.qld.gov.au";
@@ -19116,17 +19114,17 @@ class PlsPlusAddressProvider extends CustomAddressProvider {
     return "".concat(apiBase || defaultApiBase, "/pls-plus-qg/ParseAddress?").concat(this.serialize(params));
   }
 }
-;// CONCATENATED MODULE: ./src/providers/address/index.js
+;// ./src/providers/address/index.js
 
 /* harmony default export */ const address = ({
   [PlsPlusAddressProvider.name]: PlsPlusAddressProvider
 });
-;// CONCATENATED MODULE: ./src/providers/index.js
+;// ./src/providers/index.js
 
 /* harmony default export */ const providers = ({
   address: address
 });
-;// CONCATENATED MODULE: ./src/index.des.js
+;// ./src/index.des.js
 // the import below is the ie11 polyfill, uncomment to add back in
 // import "core-js/stable";
 // import "regenerator-runtime/runtime";

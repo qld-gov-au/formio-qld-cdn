@@ -52,7 +52,7 @@ __webpack_require__.d(__webpack_exports__, {
   init: () => (/* binding */ init)
 });
 
-;// CONCATENATED MODULE: ./src/helpers/FormioScript/FormioScript.js
+;// ./src/helpers/FormioScript/FormioScript.js
 const defaultVersion = window.formioQldCdnVersion || "v2/v2.x.x-latest";
 const createScripts = (scripts, i, mainResolve) => {
   if (i > scripts.length - 1) {
@@ -139,9 +139,9 @@ const initScript = function (scripts) {
     }
   });
 };
-;// CONCATENATED MODULE: ./src/helpers/FormioScript/index.js
+;// ./src/helpers/FormioScript/index.js
 
-;// CONCATENATED MODULE: ./src/helpers/FormioScript/index.testing.js
+;// ./src/helpers/FormioScript/index.testing.js
 
 const baseUrl = getDefaultCdn("test-static");
 const scripts = getDefaultScripts(baseUrl);

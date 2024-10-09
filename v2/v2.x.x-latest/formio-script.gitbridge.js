@@ -52,7 +52,7 @@ __webpack_require__.d(__webpack_exports__, {
   init: () => (/* binding */ init)
 });
 
-;// CONCATENATED MODULE: ./src/helpers/FormioScript/FormioScript.js
+;// ./src/helpers/FormioScript/FormioScript.js
 const defaultVersion = window.formioQldCdnVersion || "v2/v2.x.x-latest";
 const createScripts = (scripts, i, mainResolve) => {
   if (i > scripts.length - 1) {
@@ -139,9 +139,9 @@ const initScript = function (scripts) {
     }
   });
 };
-;// CONCATENATED MODULE: ./src/helpers/FormioScript/index.js
+;// ./src/helpers/FormioScript/index.js
 
-;// CONCATENATED MODULE: ./src/helpers/FormioScript/index.gitbridge.js
+;// ./src/helpers/FormioScript/index.gitbridge.js
 
 const version = window.formIOGitBridgeID || "248740";
 const scripts = getDefaultScripts("/__data/assets/git_bridge/0025/".concat(version));
