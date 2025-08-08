@@ -255,7 +255,7 @@ const initFormioInstance = (elem, opts) => {
   let formName = "";
   // Check if value is true/exists and is numeric
   if (opts.formRevision) {
-    formName = "".concat(opts.formName, "/v/").concat(opts.formRevision);
+    formName = "".concat(opts.formName, "?formRevision=").concat(opts.formRevision);
   } else {
     formName = opts.formName;
   }
