@@ -26,7 +26,7 @@ module.exports = {
   i18n: {
     en: {
       pattern: "Must use the format shown",
-      error: '<h2><span class="fa fa-exclamation-triangle"></span> Please check your answers</h2>'
+      error: '<h2 class="alert-heading">Please check your answers</h2>'
     }
   }
 };
